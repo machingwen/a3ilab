@@ -32,6 +32,6 @@ We constantly challenge our paradigms, remain updated with global trends, and pu
 1. Unkown-aware new object defect detection
 2. Compositional unseen image generation
 3. Battery management AI models
-4. LLM Powered Autonomous Agents
+4. GPT powered autonomous agents
 
 
