@@ -13,12 +13,12 @@ Development of Intelligent Systems: At the AAAI Laboratory, our primary focus li
 We constantly challenge our paradigms, remain updated with global trends, and push the boundaries of what AI can achieve. Together, let's shape the future of artificial intelligence, ensuring it's both safe and incredibly helpful for generations to come.
 
 
-## 實驗室宣導性三公約
+### 實驗室宣導性三公約
 1. 私人桌面，宜整理整潔。
 2. 私人物品，宜收入私人使用之櫃子中。
 3. 生活垃圾，宜於離開實驗室時，帶走並丟棄。
 
-## 實驗室強制性八守則
+### 實驗室強制性八守則
 1. 私人物品須放置於私人區域。
 2. 離開實驗室時，椅子與移動櫃須回復定位。
 3. 設置周值日生，負責保持公共區域整潔，須定位公共設備與桌椅。
