@@ -28,6 +28,10 @@ We constantly challenge our paradigms, remain updated with global trends, and pu
 7. 設置周值日生，負責公共櫃子管理，須檢查是否有私人用品占用。
 8. 實驗室有非實驗用途需求時，須向老師提出申請。
 
-
+### Research Topics:
+1. Unkown-aware new object defect detection
+2. Compositional unseen image generation
+3. Battery management AI models
+4. LLM Powered Autonomous Agents
 
 
