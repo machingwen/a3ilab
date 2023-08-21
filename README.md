@@ -33,5 +33,6 @@ We constantly challenge our paradigms, remain updated with global trends, and pu
 2. Compositional unseen image generation
 3. Battery management AI models
 4. GPT powered autonomous agents
+5. AI in healthcare and medicine
 
 
