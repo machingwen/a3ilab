@@ -35,4 +35,10 @@ We constantly challenge our paradigms, remain updated with global trends, and pu
 4. GPT powered autonomous agents
 5. AI in healthcare and medicine
 
-
+### Recent publications
+1. Ma, C. &amp; Liu, Y.. (2023). DeepGD3: Unknown-Aware Deep Generative/Discriminative Hybrid Defect Detector for PCB Soldering Inspection. <i>Proceedings of the Thirty-Ninth Conference on Uncertainty in Artificial Intelligence</i>, in <i>Proceedings of Machine Learning Research</i> 216:1326-1335 Available from https://proceedings.mlr.press/v216/ma23a.html.
+2. Lee, S. P., Kini, N. P., Peng, W. H., Ma, C. W., & Hwang, J. N. (2023). Hupr: A benchmark for human pose estimation using millimeter wave radar. In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (pp. 5715-5724).
+3. Yang, Ting‐Ting, Ching‐Wen Ma, Jyun‐Wei Jhou, Yu‐Ting Chen, and Cheng‐Che E. Lan. "Response predictor for pigment reduction after one session of photo based therapy using convolutional neural network: A proof of concept study." Photodermatology, Photoimmunology & Photomedicine (2023).
+4. J. -Y. Liao, J. -W. Hsieh and C. -W. Ma, "Automatic Meter Reading Based on Bi-Fusion MSP Network and Carry-Out Rechecking," in IEEE Access, vol. 10, pp. 96710-96719, 2022, doi: 10.1109/ACCESS.2022.3201235.
+5. S. -M. Kao, C. -W. Ma and J. -W. Hsieh, "Integrating Low-Cost LiDAR and Stereo Camera for 3D Object Detection with Lidar-Stereo Fusion and Cost Volume Enhancement," TENCON 2022 - 2022 IEEE Region 10 Conference (TENCON), Hong Kong, Hong Kong, 2022, pp. 1-6, doi: 10.1109/TENCON55691.2022.9977732.
+6. Y. Liu and C. -W. Ma, "Improving Tiny YOLO with Fewer Model Parameters," 2021 IEEE Seventh International Conference on Multimedia Big Data (BigMM), Taichung, Taiwan, 2021, pp. 61-64, doi: 10.1109/BigMM52142.2021.00017.
