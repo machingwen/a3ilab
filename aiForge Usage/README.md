@@ -19,4 +19,4 @@ aiForge 網站: "https://ai.acer-ast.com:32000/portal2/main/index"
 
 Release 後 將NFS選項打勾，設定完成即可開始使用。
 
-<img src="img/aiforge1.png" alt="drawing" width="400"/> 
+<img src="img/aiforge1.png" alt="drawing" width="800"/> 
