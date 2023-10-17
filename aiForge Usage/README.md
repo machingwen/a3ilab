@@ -30,5 +30,5 @@ Release 後 將NFS選項打勾，設定完成即可開始使用。
 
 <img src="img/aiforge1.png" alt="drawing" width="800"/> 
 
-詳細介紹可查看介紹文件
-[**文件**](https://github.com/machingwen/a3ilab/tree/main/aiForge%20Usage/pdf)
+詳細介紹可查看介紹文件 :
+[**文件連結**](https://github.com/machingwen/a3ilab/tree/main/aiForge%20Usage/pdf)
