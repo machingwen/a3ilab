@@ -15,6 +15,15 @@ aiForge 網站: "https://ai.acer-ast.com:32000/portal2/main/index"
 
 <img src="img/NFS1.png" alt="drawing" width="1600"/> 
 
+## 相關設定
+
+在資源管理，可以設定動態磁碟，將可用空間使用到100GB
+
+需要Release的時候，點擊右上方釋放按鈕
+
+<img src="img/release.png" alt="drawing" width="1600"/> 
+
+
 ## aiForge 設定
 
 Release 後 將NFS選項打勾，設定完成即可開始使用。
