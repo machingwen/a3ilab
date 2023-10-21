@@ -65,7 +65,43 @@ Here is the list of LLM papers we plan to study.
 
 ### RLHF
 
+* Dong, Yi, et al. "SteerLM: Attribute Conditioned SFT as an (User-Steerable) Alternative to RLHF." arXiv preprint arXiv:2310.05344 (2023).[Paper](https://arxiv.org/abs/2310.05344)
+
 ### Theorem
+
+* Dai, Damai, et al. "Why Can GPT Learn In-Context? Language Models Implicitly Perform Gradient Descent as Meta-Optimizers." ICLR 2023 Workshop on Mathematical and Empirical Understanding of Foundation Models. 2023.[Paper](https://openreview.net/forum?id=fzbHRjAd8U)
+
+### Dataset curation
+
+* Xu, Can, et al. "Wizardlm: Empowering large language models to follow complex instructions." arXiv preprint arXiv:2304.12244 (2023).[Paper](https://arxiv.org/abs/2304.12244)
+
+* Mukherjee, Subhabrata, et al. "Orca: Progressive learning from complex explanation traces of gpt-4." arXiv preprint arXiv:2306.02707 (2023).[Paper](https://arxiv.org/abs/2306.02707)
+
+  
+### Efficient computtion
+
+* Dao, Tri, et al. "Flashattention: Fast and memory-efficient exact attention with io-awareness." Advances in Neural Information Processing Systems 35 (2022): 16344-16359.[Paper](https://proceedings.neurips.cc/paper_files/paper/2022/hash/67d57c32e20fd0a7a302cb81d36e40d5-Abstract-Conference.html)
+
+* Csordás, Róbert, Kazuki Irie, and Jürgen Schmidhuber. "Approximating Two-Layer Feedforward Networks for Efficient Transformers." arXiv preprint arXiv:2310.10837 (2023).[Paper](https://arxiv.org/abs/2310.10837)
+
+* Zhangir Azerbayev. "Llemma: An Open Language Model For Mathematics" arXiv preprint arXiv:2310.10631 (2023).[Paper](https://arxiv.org/abs/2310.10631)
+
+* Dettmers, Tim, et al. "Qlora: Efficient finetuning of quantized llms." arXiv preprint arXiv:2305.14314 (2023).[Paper](https://arxiv.org/abs/2305.14314)
+
+
+### Financial
+
+### History and Forcasting
+
+### Localized LLM
+
+### Long input
+
+### Planning and Dcision Making
+
+### Prompt Engineering
+
+
 
 paper 3 ...
 
