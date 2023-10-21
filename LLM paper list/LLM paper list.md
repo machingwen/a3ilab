@@ -10,7 +10,13 @@ Pan, Shirui, et al. "Unifying Large Language Models and Knowledge Graphs: A Road
 
 ## LLM - Reasoning
 
+Zheng, Shen, Jie Huang, and Kevin Chen-Chuan Chang. "Why Does ChatGPT Fall Short in Answering Questions Faithfully?." arXiv preprint arXiv:2304.10513 (2023).
+
 ### LLM - Reasoning - Math
+
+## RLHF
+
+## Theorem
 
 paper 3 ...
 
