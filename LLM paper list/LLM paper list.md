@@ -21,7 +21,7 @@ Here is the list of LLM papers we plan to study.
 
 
 
-## LLM - Reasoning
+### LLM - Reasoning
 
 * Zheng, Shen, Jie Huang, and Kevin Chen-Chuan Chang. "Why Does ChatGPT Fall Short in Answering Questions Faithfully?." arXiv preprint arXiv:2304.10513 (2023).[Paper](https://arxiv.org/abs/2304.10513)
 
@@ -47,11 +47,25 @@ Here is the list of LLM papers we plan to study.
 
 
 
-### LLM - Reasoning - Math
+#### LLM - Reasoning - Math
 
-## RLHF
+* Poesia, Gabriel, and Noah D. Goodman. "Peano: learning formal mathematical reasoning." Philosophical Transactions of the Royal Society A 381.2251 (2023): 20220044.[Paper](https://royalsocietypublishing.org/doi/full/10.1098/rsta.2022.0044)
 
-## Theorem
+* Scarlatos, Alexander, and Andrew Lan. "Tree-based representation and generation of natural and mathematical language." arXiv preprint arXiv:2302.07974 (2023).[Paper](https://arxiv.org/abs/2302.07974)
+
+* Dziri, Nouha, et al. "Faith and Fate: Limits of Transformers on Compositionality." arXiv preprint arXiv:2305.18654 (2023).[Paper](https://arxiv.org/abs/2305.18654)
+
+* Yang, Zhen, et al. "GPT Can Solve Mathematical Problems Without a Calculator." arXiv preprint arXiv:2309.03241 (2023).[Paper](https://arxiv.org/abs/2309.03241)
+
+* Yu, Longhui, et al. "Metamath: Bootstrap your own mathematical questions for large language models." arXiv preprint arXiv:2309.12284 (2023).[Paper](https://arxiv.org/abs/2309.12284)
+
+* Gou, Zhibin, et al. "ToRA: A Tool-Integrated Reasoning Agent for Mathematical Problem Solving." arXiv preprint arXiv:2309.17452 (2023).[Paper](https://arxiv.org/abs/2309.17452)
+
+
+
+### RLHF
+
+### Theorem
 
 paper 3 ...
 
