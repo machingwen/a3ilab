@@ -97,28 +97,28 @@ Here is the list of LLM papers we plan to study.
 
 ### History and Forcasting
 
-Krenn, Mario, et al. "Forecasting the future of artificial intelligence with machine learning-based link prediction in an exponentially growing knowledge network." Nature Machine Intelligence (2023): 1-10.[Paper](https://www.nature.com/articles/s42256-023-00735-0)
+* Krenn, Mario, et al. "Forecasting the future of artificial intelligence with machine learning-based link prediction in an exponentially growing knowledge network." Nature Machine Intelligence (2023): 1-10.[Paper](https://www.nature.com/articles/s42256-023-00735-0)
 
 ### Localized LLM
 
-Huang, Huang, et al. "AceGPT, Localizing Large Language Models in Arabic." arXiv preprint arXiv:2309.12053 (2023).[Paper](https://arxiv.org/abs/2309.12053)
+* Huang, Huang, et al. "AceGPT, Localizing Large Language Models in Arabic." arXiv preprint arXiv:2309.12053 (2023).[Paper](https://arxiv.org/abs/2309.12053)
 
 ### Long input
 
-Ding, Jiayu, et al. "Longnet: Scaling transformers to 1,000,000,000 tokens." arXiv preprint arXiv:2307.02486 (2023).[Paper](https://arxiv.org/abs/2307.02486)
+* Ding, Jiayu, et al. "Longnet: Scaling transformers to 1,000,000,000 tokens." arXiv preprint arXiv:2307.02486 (2023).[Paper](https://arxiv.org/abs/2307.02486)
 
 
 ### Planning and Dcision Making
 
-Dagan, Gautier, Frank Keller, and Alex Lascarides. "Dynamic Planning with a LLM." arXiv preprint arXiv:2308.06391 (2023).[Paper](https://arxiv.org/pdf/2308.06391.pdf)
+* Dagan, Gautier, Frank Keller, and Alex Lascarides. "Dynamic Planning with a LLM." arXiv preprint arXiv:2308.06391 (2023).[Paper](https://arxiv.org/pdf/2308.06391.pdf)
 
 ### Prompt Engineering
 
-Yang, Chengrun, et al. "Large language models as optimizers." arXiv preprint arXiv:2309.03409 (2023).[Paper](https://arxiv.org/abs/2309.03409)
+* Yang, Chengrun, et al. "Large language models as optimizers." arXiv preprint arXiv:2309.03409 (2023).[Paper](https://arxiv.org/abs/2309.03409)
 
-Shi, Zhengxiang, and Aldo Lipani. "DePT: Decomposed Prompt Tuning for Parameter-Efficient Fine-tuning." arXiv preprint arXiv:2309.05173 (2023).[Paper](https://arxiv.org/abs/2309.05173)
+* Shi, Zhengxiang, and Aldo Lipani. "DePT: Decomposed Prompt Tuning for Parameter-Efficient Fine-tuning." arXiv preprint arXiv:2309.05173 (2023).[Paper](https://arxiv.org/abs/2309.05173)
 
-ChatGPT Prompt Engineering ChatGPT提示工程 [Paper](file:///C:/Users/a4691/OneDrive/Desktop/LLM/Prompt%20Engineering/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B%E6%8C%87%E5%8D%97%20_%20Prompt%20Engineering%20Guide.html)
+* ChatGPT Prompt Engineering ChatGPT提示工程 [Paper](file:///C:/Users/a4691/OneDrive/Desktop/LLM/Prompt%20Engineering/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B%E6%8C%87%E5%8D%97%20_%20Prompt%20Engineering%20Guide.html)
 
 
 
