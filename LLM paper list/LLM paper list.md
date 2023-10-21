@@ -118,7 +118,7 @@ Here is the list of LLM papers we plan to study.
 
 * Shi, Zhengxiang, and Aldo Lipani. "DePT: Decomposed Prompt Tuning for Parameter-Efficient Fine-tuning." arXiv preprint arXiv:2309.05173 (2023).[Paper](https://arxiv.org/abs/2309.05173)
 
-* ChatGPT Prompt Engineering ChatGPT提示工程 [Paper](file:///C:/Users/a4691/OneDrive/Desktop/LLM/Prompt%20Engineering/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B%E6%8C%87%E5%8D%97%20_%20Prompt%20Engineering%20Guide.html)
+* ChatGPT Prompt Engineering ChatGPT提示工程 [Paper](https://www.promptingguide.ai/zh/models/chatgpt)
 
 
 
