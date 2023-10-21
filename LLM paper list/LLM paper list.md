@@ -25,6 +25,28 @@ Algorithmic prompting or how to teach math to a large language model
 
 Zheng, Shen, Jie Huang, and Kevin Chen-Chuan Chang. "Why Does ChatGPT Fall Short in Answering Questions Faithfully?." arXiv preprint arXiv:2304.10513 (2023).[Paper](https://arxiv.org/abs/2304.10513)
 
+Zhang, Hanlin, et al. "Improved logical reasoning of language models via differentiable symbolic programming." arXiv preprint arXiv:2305.03742 (2023).[Paper](https://arxiv.org/abs/2305.03742)
+
+Yao, Shunyu, et al. "React: Synergizing reasoning and acting in language models." arXiv preprint arXiv:2210.03629 (2022).[Paper](https://arxiv.org/abs/2210.03629)
+
+Yao, Shunyu, et al. "Tree of thoughts: Deliberate problem solving with large language models." arXiv preprint arXiv:2305.10601 (2023).[Paper](https://arxiv.org/abs/2305.10601)
+
+Poesia, Gabriel, et al. "Certified Reasoning with Language Models." arXiv preprint arXiv:2306.04031 (2023).[Paper](https://arxiv.org/abs/2306.04031)
+
+Huang, Yue, Qihui Zhang, and Lichao Sun. "TrustGPT: A Benchmark for Trustworthy and Responsible Large Language Models." arXiv preprint arXiv:2306.11507 (2023).[Paper](https://arxiv.org/abs/2306.11507)
+
+Lee, Harrison, et al. "Rlaif: Scaling reinforcement learning from human feedback with ai feedback." arXiv preprint arXiv:2309.00267 (2023).[Paper](https://arxiv.org/abs/2309.00267)
+
+Huang, Jie, et al. "Large Language Models Cannot Self-Correct Reasoning Yet." arXiv preprint arXiv:2310.01798 (2023).[Paper](https://arxiv.org/abs/2310.01798)
+
+Goyal, Sachin, et al. "Think before you speak: Training Language Models With Pause Tokens." arXiv preprint arXiv:2310.02226 (2023).[Paper](https://arxiv.org/abs/2310.02226?trk=public_post_comment-text)
+
+Zhou, Andy, et al. "Language Agent Tree Search Unifies Reasoning Acting and Planning in Language Models." arXiv preprint arXiv:2310.04406 (2023).[Paper](https://arxiv.org/abs/2310.04406)
+
+Kadavath, Saurav, et al. "Language models (mostly) know what they know." arXiv preprint arXiv:2207.05221 (2022).[Paper](https://arxiv.org/abs/2207.05221)
+
+
+
 ### LLM - Reasoning - Math
 
 ## RLHF
