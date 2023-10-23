@@ -4,7 +4,7 @@ We present our code on PCB Dataset and Fruit Dataset in two folder. Please go in
 
 ## Dataset
 
-[**PCB Dataset**](https://github.com/jason211346/Phison-defect-detection-GP/tree/main/PCB_dataset) |  [**Fruit Dataset**](https://github.com/jason211346/Phison-defect-detection-GP/tree/main/Fruit_dataset)
+[**PCB Dataset**](https://github.com/machingwen/a3ilab/tree/main/Projects/Guided%20Anomaly%20detection/PCB_dataset) |  [**Fruit Dataset**](https://github.com/machingwen/a3ilab/tree/main/Projects/Guided%20Anomaly%20detection/Fruit_dataset)
 :-------------------------:|:-------------------------:
 <img src="img/PCB_dataset.png" alt="drawing" width="400"/> |  <img src="img/fruit_dataset.png" alt="drawing" width="400"/>
 
