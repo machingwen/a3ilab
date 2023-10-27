@@ -78,7 +78,7 @@ Here is the list of LLM papers we plan to study.
 * Mukherjee, Subhabrata, et al. "Orca: Progressive learning from complex explanation traces of gpt-4." arXiv preprint arXiv:2306.02707 (2023). [Paper](https://arxiv.org/abs/2306.02707)
 
   
-### Efficient computtion
+### Efficient computation
 
 * Dao, Tri, et al. "Flashattention: Fast and memory-efficient exact attention with io-awareness." Advances in Neural Information Processing Systems 35 (2022): 16344-16359. [Paper](https://proceedings.neurips.cc/paper_files/paper/2022/hash/67d57c32e20fd0a7a302cb81d36e40d5-Abstract-Conference.html)
 
@@ -95,7 +95,7 @@ Here is the list of LLM papers we plan to study.
 
 * de Padua, Raul Salles, Imran Qureshi, and Mustafa U. Karakaplan. "GPT-3 Models are Few-Shot Financial Reasoners." arXiv preprint arXiv:2307.13617 (2023). [Paper](https://arxiv.org/abs/2307.13617)
 
-### History and Forcasting
+### History and Forecasting
 
 * Krenn, Mario, et al. "Forecasting the future of artificial intelligence with machine learning-based link prediction in an exponentially growing knowledge network." Nature Machine Intelligence (2023): 1-10. [Paper](https://www.nature.com/articles/s42256-023-00735-0)
 
@@ -108,7 +108,7 @@ Here is the list of LLM papers we plan to study.
 * Ding, Jiayu, et al. "Longnet: Scaling transformers to 1,000,000,000 tokens." arXiv preprint arXiv:2307.02486 (2023). [Paper](https://arxiv.org/abs/2307.02486)
 
 
-### Planning and Dcision Making
+### Planning and Decision Making
 
 * Dagan, Gautier, Frank Keller, and Alex Lascarides. "Dynamic Planning with a LLM." arXiv preprint arXiv:2308.06391 (2023). [Paper](https://arxiv.org/pdf/2308.06391.pdf)
 
