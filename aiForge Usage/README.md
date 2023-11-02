@@ -32,3 +32,7 @@ Release 後 將NFS選項打勾，設定完成即可開始使用。
 
 詳細介紹可查看介紹文件 :
 [**文件連結**](https://github.com/machingwen/a3ilab/tree/main/aiForge%20Usage/pdf)
+
+## Debug 工具介紹
+
+[**影片連結**](https://youtu.be/6HXFPBUjFVg?si=WnrSgGWTSpN8XpzN)
