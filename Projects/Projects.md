@@ -4,4 +4,4 @@
 
 # MOE of MOE
 
-[Source code](https://github.com/SerenityOuO/Selection-of-Predictions)
+[Source code](https://github.com/SerenityOuO/Selection-of-Predictions-SoP)
