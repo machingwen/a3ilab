@@ -1,6 +1,6 @@
 # Guided Anomaly detection (aka. deepGD3+)
 
-[Source code](https://github.com/machingwen/Guided%20Anomaly%20detection)
+[Source code](https://github.com/machingwen/DeepGD3_Plus)
 
 # MOE of MOE
 
