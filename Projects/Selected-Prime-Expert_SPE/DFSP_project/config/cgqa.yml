@@ -1,0 +1,35 @@
+model:
+  fusion: txt2img
+  K: 1
+  prompt_template: "a photo of x x"
+  clip_model: "ViT-L/14"
+  res_w: 0.8
+  SA_K: 1
+  
+train:
+  dataset: cgqa
+  dataset_path: "../DFSP_org/download_data/data/cgqa"
+  lr: 0.00005
+  attr_dropout: 0.3
+  weight_decay: 0.00001
+  context_length: 8
+  train_batch_size: 256
+  gradient_accumulation_steps: 1
+  seed: 0
+  epochs: 20
+  epoch_start: 0
+  save_path: data/model/cgqa/dfsp
+  best_model_metric: best_loss     #best_unseen  best_seen AUC best_loss best_hm
+  load_model: False     # False or model path
+  att_obj_w: 0.01
+  sp_w: 0.1
+
+test:
+  eval_batch_size: 128
+  open_world: False
+  topk: 1
+  text_encoder_batch_size: 36
+  threshold: 0.4
+  threshold_trials: 50
+  bias: 0.001
+  load_model:  ../DFSP_org/data/model/cgqa/dfsp/txt2img_best.pt    # False or model path
