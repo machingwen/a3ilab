@@ -76,7 +76,7 @@ To run, just edit the open-world parameter in `config/<dataset>.yml`
 ### model 
 
 https://huggingface.co/SerenityYuki/CZSL/tree/main
-
+https://huggingface.co/SerenityYuki/CZSL-mit/tree/main
 ### SPE and HMOE 
 ```
 python -u test_v4.py --dataset config1_<dataset>
