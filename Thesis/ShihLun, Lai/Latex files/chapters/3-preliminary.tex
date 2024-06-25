@@ -1,0 +1,91 @@
+\chapter{Preliminary}
+\label{chapter:preliminary}
+In this chapter, we will explain the process and mathematical principles of the denoising diffusion probabilistic model (diffusion model for short) \cite{ho2020denoising}, providing a basic understanding of diffusion models for better understanding the rest of this thesis.
+\section{Diffusion model}
+\label{sec:ddpm}
+Diffusion model is a class of generative models that simulate a stochastic diffusion process where a simple initial distribution is transformed into a more complex distribution that represents the data distribution. They define a Markov chain of diffusion steps to slowly add random noise to data and then learn to reverse the diffusion process to construct desired data samples from the noise. Given a data point sampled from a real data distribution $x_0 \sim q(x)$, we add small amount of Gaussian noise $\epsilon$ to the original sample in $T$ steps, where $T$ is the total diffusion steps, $T \in \{1, 2, ..., T\}$, this produce a sequence of noisy sample $x_1, x_2, ..., x_T$ with different noise level and they all share the same dimension as $x_0$. The posterior $q(x_1, ...,  x_t | x_0)$, also known as the \textbf{forward diffusion process}, which converts the original data distribution $q(x_0)$ into a tractable prior distribution $q(x_t)$, typically Gaussian distribution. This process is set as a Markov chain, we can factorize the posterior as follows:
+\begin{equation} \label{eq:1}
+    q(x_1, ..., x_t | x_0) = \prod_{t = 1}^{T} q(x_t | x_{t-1}), \quad q(x_t | x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t}x_{t-1}, \beta_t\textbf{I}),
+\end{equation}
+where $\beta_t \in (0, 1)$ is the variance schedule controlling the step size and can be regarded as a constant hyperparameter. Let $\alpha_t = 1 - \beta_t$ and $\overline{\alpha}_t = \prod_{i=1}^{t}\alpha_i$, then $x_t$ at arbitrary timestep $t$ can be expressed in a closed form:
+\begin{equation} \label{eq:2}
+    q(x_t|x_0) = \mathcal{N}(x_t;\sqrt{\overline{\alpha}_t}x_0, (1 - \overline{\alpha}_t)\textbf{I}),
+\end{equation}
+Equation \ref{eq:2} can be further reparameterized as
+\begin{equation} \label{eq:3}
+    x_t = \sqrt{\overline{\alpha}_t}x_0 + \sqrt{1 - \overline{\alpha}_t}\epsilon, \epsilon \sim \mathcal{N}(0, \textbf{I}),
+\end{equation}
+
+The \textbf{reverse diffusion process} gradually remove noise from noisy sample $x_t$, producing a slightly denoised sample $x_{t-1}$, since we cannot estimate $q(x_{t-1} | x_t)$, we need to learn a model $p_\theta$ to approximate $q(x_{t-1} | x_t)$.
+\begin{equation} \label{eq:4}
+    p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t))
+\end{equation}
+Here, $\theta$ denotes the model parameters and the mean $\mu_\theta(x_t, t)$ and the variance are modeled using deep neural networks. With this "denoising model", we can generate a data sample $x_0$ from a noise sample $x_t ~ q(x_t)$ sampled from prior distribution. 
+
+When training the denoising model, \cite{ho2020denoising} try to maximize the variation lower bound (ELBO) on negative log-likelihood and utilize the Kullback-Leibler (KL) divergence.
+\begin{equation} \label{eq:5}
+\begin{split}
+    \mathbb{E}_q[-\mathrm{log}p_\theta(x_0] \leq L \coloneqq \underbrace{\matchbb{E}_q[D_{KL}(q(x_T|x_0) || p_\theta(x_T))}_{L_T} + \\ \sum_{t=2}^{T}\underbrace{D_{KL}(q(x_{t-1}|x_t, x_0) || p_\theta(x_{t-1}|x_t))}_{L_{t-1}} - \underbrace{\mathrm{log}p_\theta(x_0|x_1)]}_{L_0}
+\end{split}
+\end{equation}
+
+$L_T$ can be considered as a constant since $q$ does not have any parameters and $x_T$ is a Gaussian noise. $L_t$ can be considered as bringing two Gaussian distributions: $q(x_{t-1}|x_t, x_0) = \mathcal{N}(x_{t-1};\tilde{\mu}_t(x_t, x_0), \tilde{\beta}_tI)$ and $p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, x_0), \Sigma_\theta)$ closer. Let:
+\begin{equation} \label{eq:6}
+    \tilde{\mu}_t(x_t, x_0) = \frac{\sqrt{\alpha}_t(1 - \overline{\alpha}_{t-1})}{1 - \overline{\alpha}_t}x_t + \frac{\sqrt{\overline{\alpha}_{t-1}}\beta_t}{1 - \overline{\alpha}_t}, \tilde{\beta}_t = \frac{1 - \overline{\alpha}_{t-1}}{1 - \overline{\alpha}_t}\beta_t \quad
+\end{equation}
+Based on the solving the KL divergence on the multivariate Gaussian distribution, $L_{t-1}$ can be rewritten as:
+
+\begin{equation} \label{eq:7}
+    L_{t-1} = \mathbb{E}_q[ \frac{1}{2\|\Sigma_\theta(x_t, t)\|_2^2} \|\tilde{\mu}_t(x_t, x_0) - \mu_\theta(x_t, t) \|^2 ] + C
+\end{equation}
+
+where $C$ is a constant, $\mu_\theta(x_t, x_0)$ is what we train to predict $\tilde{\mu}_t(x_t, x_0)$. 
+
+\begin{equation} \label{eq:8}
+    \mu_\theta(x_t, t) = \frac{1}{\sqrt{\alpha_t}}(x_t - \frac{1 - \alpha_t}{\sqrt{1 - \overline{\alpha}_t}}\epsilon_\theta(x_t, t))
+\end{equation}
+
+$\epsilon_\theta$ is the denoising model intended to predict $\epsilon_t$ from $x_t$. Since $x_t$ is available at training phase, we can try predict Gaussian noise term $\epsilon_t$ from the input $x_t$ as time step $t$ instead of predicting $\tilde{\mu}_t(x_t, x_0)$. The training objective of the denoising model becomes to predict the noise vector $\epsilon_t$ given noisy sample $x_t$ and timestep $t$. Bring Eq.(\ref{eq:6}), Eq.(\ref{eq:8}) into Eq.(\ref{eq:7}), Eq.(\ref{eq:7}) can be simplified to:
+
+\begin{equation} \label{eq:9}
+    L_{t-1} = \mathbb{E}_{x_0, \epsilon}[\frac{\beta_t^2}{2\alpha_t(1 - \overline{\alpha}_t\|\Sigma_\theta\|_2^2}\|\epsilon - \epsilon_\theta(\sqrt{\overline{\alpha}_t}x_0 + \sqrt{1 - \overline{\alpha}_t}\epsilon, t)\|^2]
+\end{equation}
+
+Through experiment results, \cite{ho2020denoising} discovered that beneficial to sample quality to train on a simpler objective function that ignored the weighting term:
+\begin{equation} \label{eq:10}
+    L_{simple} = \mathbb{E}_{x_0, \epsilon}[\|\epsilon - \epsilon_\theta(\sqrt{\overline{\alpha}_t}x_0 + \sqrt{1 - \overline{\alpha}_t}\epsilon, t)\|^2]
+\end{equation}
+
+
+Note that \cite{ho2020denoising} does not explicitly consider the $\Sigma_\theta$ in both training and inference;instead, it is set to $\beta_t$ or $\tilde{\beta}_t$. They found that predict $\Sigma_\theta$ could lead to training instability.
+
+\section{Denoising Diffusion Implicit Models}
+In practical applications, achieving high-quality images requires a larger timestep $T$, which can result in a time-consuming process for reverse diffusion process. To accelerate the reverse diffusion process, \cite{song2020denoising} introduced an approach that sacrifices diversity in exchange for faster inference. They discovered that the objective loss function in DDPM only relies on the marginal distribution $q(x_t|x_0)$, rather than on the joint distribution $q(x_{1:T}|x_0)$. They choose to use an alternative non-Markovian forward process, indexed by a real vector $\sigma \in \mathbb{R^T}$ the forward process is defined as:
+\begin{equation} \label{eq:11}
+    q_\sigma(x_{1:T}|x_0) = q_\sigma(x_T|x_0)\prod_{t=2}^{T}q_\sigma(x_{t-1}|x_t, x_0)
+\end{equation}
+
+where $q_\sigma(x_T|x_0) = \mathcal{N}(\sqrt{\alpha_T}x_0, (1 - \alpha_T)\textbf{I})$ for all $t > 1$,
+\begin{equation} \label{eq:12}
+    q_\sigma(x_{t-1} | x_t, x_0) = \mathcal{N}(x_{t-1}; \sqrt{\alpha_{t-1}}x_0 + \sqrt{1 - \alpha_{t-1} - \sigma_t^2} \frac{x_t - \sqrt{\alpha_t}x_0}{\sqrt{1 - \alpha_t}}, \sigma_t^2I)
+\end{equation}
+The forward process can be derived from Bayes' rule:
+\begin{equation} \label{eq:13}
+        q_\sigma(x_t | x_{t-1}, x_0) = \frac{q_\sigma(x_{t-1} | x_t, x_0)q_\sigma(x_t | x_0)}{q_\sigma(x_{t-1}|x_0)}
+\end{equation}
+In the reverse diffusion process, we can use following equation to generate $x_{t-1}$ from $x_t$
+\begin{equation} \label{eq:14}
+    x_{t-1} = \sqrt{\alpha_{t-1}}(\underbrace{\frac{x_t - \sqrt{1 - \alpha_t}\epsilon_\theta(x_t, t)}{\sqrt{\alpha_t}}}_{\text{predicted $x_0$}}) + \underbrace{\sqrt{1 - \alpha_{t-1} - \sigma_t^2} \cdot \epsilon_\theta(x_t, t)}_{\text{direction pointing to $x_t$}} + \underbrace{\sigma_t\epsilon_t}_{\text{random noise}}
+\end{equation}
+
+Let $\sigma_t^2 = \eta \cdot \tilde{\beta}_t$, we can consider $\eta$ as a hyperparameter to control the sampling stochasticity. When $\eta = 0$, the forward process becomes deterministic, the reverse process becomes a fixed procedure while the random noise term in Eq. \ref{eq:14} becomes zero.
+
+Because DDIM has no specific forward process, we can use a forward process with a smaller number of steps to accelerate the model's generation process. We sample a subsequence $[\tau_1, \dots, \tau_S]$ with length $S$ from the original sequence $[1, \dots, T]$, then:
+\begin{equation}
+    q(x_{\tau_i}|x_0) = \mathcal{N}(\sqrt{\alpha_{\tau_i}}x_0, (1 - \alpha_{\tau_i})\textbf{I})
+\end{equation}
+
+The reverse process now generates samples according to $\tau$, because the length $S$ is much smaller than $T$, we can significantly accelerate the generation process.
+
+
+In the following chapters, we will utilize the above equations to elucidate our approach.
