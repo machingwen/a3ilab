@@ -1,0 +1,77 @@
+\chapter{Related Works}
+\label{chapter:doccls}
+\section{Image Classification}
+In the landscape of defect analysis and generation, image classification plays a crucial role in identifying and categorizing various types of defects. This process involves training models to recognize specific patterns, features, and anomalies within images, contributing to the broader understanding of defects in components.
+
+Image classification models are instrumental in distinguishing between normal and defective components based on visual cues. These models leverage machine learning techniques, often utilizing convolutional neural networks (CNNs)\cite{Classification_with_CNN} or other deep learning architectures to extract and learn intricate features from images.
+
+A key aspect of image classification in defect analysis is it ability to categorize defects into different classes, facilitating a systematic approach to defect identification. This categorization is pivotal for generating accurate defect images and contributes to the overall effectiveness of defect analysis models.
+
+In the context of defect generation, image classification serves as a foundational step in providing necessary labels and conditions for the generative model. Accurate classification of defects in the training data enhances the generative model's ability to simulate realistic defects in new components during the generation process. This synergy between defect classification and generation is vital for improving the accuracy and diversity of generated defect images.
+
+It is noteworthy that our dataset exhibits a significant imbalance, with some defect components having very few samples, or even none. This data imbalance poses a challenge during the training of image classification models, as the model may tend to focus more on categories with more samples, leading to suboptimal learning for minority categories. This further emphasizes the complexity and uniqueness of our work.
+
+\section{Compositional zero-shot learning(CZSL)}
+Compositional Zero-Shot Learning (CZSL)\cite{CZSL,CZSL_1,CZSL_2,CZSL_3,CZSL_4,CZSL_5} is an extension of Zero-Shot Learning (ZSL)\cite{zero-shot-learning,zero-shot-learning_1,zero-shot-learning_2,zero-shot-learning_3,zero-shot-learning_4,zero-shot-learning_5,zero-shot-learning_6}. In traditional ZSL, models are required to recognize classes that were not shown during training. However, CZSL adds a layer of complexity by demanding that the model handle combinations of previously unseen classes.
+
+
+\subsection{Zero-Shot learning}
+In ZSL, the objective is to enable models to recognize categories that were not encountered during the training process. This is achieved by learning some form of relationship between categories. For example, a model might learn that "all cats have ears, eyes, tails, etc.," even if it has not seen a specific breed of cat during training. The prediction process in ZSL typically involves two steps: first, predicting the attributes (atr) of the target category based on available information (such as textual descriptions); second, determining the most similar category by comparing these predicted attributes with those of known categories.
+
+\subsection{Compositional Zero-shot learning}
+Unlike ZSL, CZSL does not rely on a mechanism of predicting attributes followed by comparison. The goal of CZSL is to directly teach the model to recognize new category compositions from unseen categories (for example, by observing different objects and their parts), thereby enabling it to identify new category combinations. This approach focuses more on how known concepts (such as shapes, colors, parts, etc.) can be combined to recognize new objects, rather than first predicting the attributes of these objects. Thus, CZSL can generalize to new categories more directly, without the need for explicit definition and prediction of attributes.
+
+Applications of compositional zero-shot learning span various domains such as natural language processing, computer vision, and tasks involving multimodal data. In these scenarios, models need to generalize across multiple domains or modalities to address complex zero-shot learning challenges.
+
+\section{Image Generation}
+In the realm of image generation, various techniques and models have been explored to create realistic and diverse images. This section provides an overview of the related work in the field, highlighting key methodologies that have influenced and shaped the development of image generation models.
+
+\subsection{Generative Adversarial Networks (GANs)}
+Generative Adversarial Networks (GANs)\cite{GANs} have been instrumental in the progress of image generation. Proposed by Ian Goodfellow and his colleagues in 2014, GANs consist of a generator and a discriminator engaged in a game-theoretic scenario. The generator aims to produce realistic images, while the discriminator strives to differentiate between real and generated images. This adversarial training process encourages the generator to continuously improve its image generation capabilities. GANs have demonstrated success in generating high-quality images across various domains.
+
+\subsection{Variational Autoencoders (VAEs)}
+Variational Autoencoders (VAEs)\cite{VAE} provide a probabilistic approach to image generation. These models focus on learning the latent space representation of input images, capturing the underlying structure of the data. VAEs employ an encoder-decoder architecture, where the encoder maps input images to a probabilistic latent space, and the decoder reconstructs images from samples drawn from this space. VAEs are valued for their ability to generate diverse images by sampling from the learned latent space.
+
+\subsection{Generative Models for Image Synthesis}
+The high-dimensional nature of image data poses unique challenges for generative modeling. While Generative Adversarial Networks (GANs)\cite{GANs} enable efficient sampling of high-resolution images with good perceptual quality, they struggle with optimization difficulties and capturing the complete data distribution. On the other hand, probability-based approaches emphasize robust density estimation, leading to more stable optimization. Variational Autoencoders (VAEs)\cite{VAE} and flow-based models achieve an efficient synthesis of high-resolution images, yet their sample quality falls short of GANs.
+
+Due to the inclusion of almost imperceptible high-frequency details in pixel-based image representations, maximum likelihood training demands an excessive capacity for modeling these details, resulting in prolonged training times. Recently, Diffusion Probabilistic Models (DPMs\cite{DDPM}) have demonstrated state-of-the-art results in both density estimation and sample quality. The generative power of these models arises when their underlying neural backbone is implemented as a UNet\cite{Unet}, aligning well with the natural biases of similar image data. However, evaluating and optimizing these models in pixel space suffers from slow inference speeds and extremely high training costs. While the former can be mitigated with advanced sampling strategies, training on high-resolution image data consistently demands computationally expensive gradients.
+
+To address these drawbacks, we employ the denoising diffusion implicit model (DDIM)\cite{DDIM}, which reduces the computational cost of training, accelerating inference without significant compromise in synthetic quality.
+
+\subsection{Conditional Image Generation}
+Conditional image generation involves incorporating additional information, such as class labels or textual descriptions, to guide the generation process. This approach allows for the generation of images based on specific conditions, adding a level of control and customization. Models like Conditional GANs (cGANs) and Conditional Variational Autoencoders (cVAEs) have been employed for tasks requiring conditional image synthesis.
+
+\subsection{Conditional Diffusion Models}
+Conditional Diffusion Models\cite{BeatGAN,CDM1,CDM2,CDM3,classifier_free} signify a noteworthy progression in the realm of image generation, synergizing the capabilities of diffusion processes with conditional generation methodologies. In contrast to conventional diffusion models, which predominantly emphasize unsupervised generation, conditional diffusion models introduce a nuanced layer of control and specificity through the incorporation of conditional information, such as class labels or textual descriptions, into the diffusion process.
+
+The hallmark of conditional diffusion models lies in their proficiency to create images contingent upon specific conditions, thereby facilitating targeted and image synthesis. This methodology provides a pivotal instrument for applications necessitating meticulous command over the generated content. Incorporating conditioning information during the diffusion process enables the model to create images that match predefined traits, making it suitable for various tasks, including synthesizing defects in new components.
+
+The formulation of conditional diffusion models incorporates the essence of the diffusion process, which can be expressed mathematically as follows:
+
+\[ P(X_t | X_{t-1}, ..., X_0, C) = \mathcal{N}(X_t; \mu(X_{t-1}, C), \sigma^2(X_{t-1}, C)) \]
+
+In this formula, \(X_t\) represents the image at time \(t\), \(C\) denotes the conditioning information, \(\mu\) signifies the mean function, and \(\sigma^2\) denotes the variance function.
+
+Conditional diffusion models show promise in addressing challenges related to defect generation, particularly in scenarios requiring precise control over defect features. Through the careful use of conditional information, these models not only enhance their capacity to generate images with realistic visual attributes but also dutifully adhere to specified conditions, thereby making a significant contribution to the borad field of advanced image generation techniques.
+
+\section{Language Model }
+
+Language models play a pivotal role in natural language processing and generation tasks. With the rapid advancement of deep learning, language models have seen significant improvements in performance and capabilities. In this section, we will explore language models related to defect generation, particularly those widely applied for generating descriptive text.
+
+In recent years, state-of-the-art pre-trained language models such as GPT-3 (Generative Pre-trained Transformer 3)\cite{GPT3} and BERT (Bidirectional Encoder Representations from Transformers)\cite{BERT} have achieved tremendous success in language understanding and generation tasks. These models, trained on massive datasets and equipped with powerful architectures, excel at comprehending and generating more natural, context-aware text.
+
+In defect generation, we have witnessed remarkable progress with the integration of Contrastive Language-Image Pre-Training(CLIP)\cite{CLIP}. This innovative approach involves training language models not only on textual data but also on image data, fostering a more comprehensive understanding of the relationship between textual descriptions and corresponding visual content. 
+
+Especially in the context of new component defect generation, leveraging language models can aid in generating text descriptions that better match specific defect conditions. This ability is crucial for guiding defect generation models in producing more contextually meaningful images.
+
+In contrast to traditional prompts that required detailed descriptions, our method does not require complex text but can still create accurate and exceptional images, even in new situations. This simplifies the generation process while ensuring both accuracy and diversity in the images produced.
+
+
+\section{Data Imbalance}
+
+In our research, we grapple with the challenge of data imbalance, where there is a significant disparity in the number of samples between normal and defective components. This imbalance can potentially impact the training of the model, especially concerning the task of generating defects in new components.
+
+Analysis of our dataset reveals a substantial difference in the quantity of normal and defective component samples, with a considerably larger number of normal samples. This scenario might lead the model to be overly biased towards learning features of normal components, resulting in suboptimal performance in generating defective components. To address this issue, we introduce oversampling techniques during data preprocessing, particularly focusing on oversampling defective component samples to achieve a balanced distribution between different categories.
+
+Our oversampling methods involve replicating existing defective component samples to increase their representation in the dataset. This strategy aims to ensure that the model comprehensively learns the features of defective components, thereby enhancing the generation performance. It is crucial to note that excessive use of oversampling may pose the risk of overfitting, so we carefully tune the oversampling ratios during experiments.

@@ -1,0 +1,12 @@
+\begin{abstract}%
+
+This study explores a critial issue in the field of image generation: designing a model structure capable of effectively generating defect features when only old component defect samples are available. Welding, as a widely used industrial manufacturing technique, is prone to defects due to its characteristics of high temperature, high pressure, and potential chemical reactions, which can lead to interruptions in the manufacturing process or poor final product quality. Deep learning methods have been widely employed in industrial image anomaly detection. However, when it comes to detecting images of new categories, these models often struggle to achieve the required accuracy levels for industrial production. The conventional approach of retraining models to adapt to samples from each new category entails significant human and computational costs, posing a significant challenge in detecting samples from new categories. To address this problem, we propose an approach based on the Conditional Diffusion Model-a model capable of generating images with specific features while overcoming the challenge of limited defect samples for new components.
+
+In the background and related works section, we review the development of generative models, starting from non-equilibrium thermodynamics to Denoising Diffusion Probabilistic Models (DDPM), ultimately focusing on the Conditional Diffusion Model. CCDM advantage lies in its ability to generate images with specific features based on different conditions, addressing the scarcity of defect samples for new components.
+
+In the research methodology and procedures, we propose a method using the Compositional Conditional Diffusion Model, providing a detailed description of the model's training process, including component labels, embedding generation, and the application of spatial transformers. Experimental results demonstrate the successful generation of previously unseen defect samples for new components, along with optimizations and improvements to the model.
+\end{abstract}
+
+\vspace{1cm}
+Keywords: Deep Learning, Diffusion Model, Defect Detection, Image Generation, Compositional Zero-Shot Learning (CZSL)
+
