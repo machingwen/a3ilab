@@ -1,4 +1,4 @@
-# Compositional Class label-to-image Diffusion Model (CCDM)
+# Compositional Conditional Diffusion Model (CCDM)
 
 CCDM is a diffusion model conditioned on compositional class labels. It learns to generate class features different compositional class labels. The neural network architecture is a U-Net, we implemented four different conditioning modules to compare which is the best for compositional class labels. This code is modified from [this excellent repo](https://github.com/cloneofsimo/minDiffusion) which does unconditional generation. The diffusion model is a [Denoising Diffusion Probabilistic Model (DDPM)](https://arxiv.org/abs/2006.11239).
 ## Model architecture
