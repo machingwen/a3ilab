@@ -25,6 +25,7 @@ Increasing $w$ produces images that are more typical but less diverse.
 |![](https://github.com/machingwen/a3ilab/blob/main/Projects/Compositional%20Conditional%20Diffusion%20Model/PCB%20Dataset.png) |
 ## Samples generated from CCDM
 <p align = "center">
-<img width="600" src="CelebASamples.png"/img>
+<img width="600" src="https://github.com/machingwen/a3ilab/blob/main/Projects/Compositional%20Conditional%20Diffusion%20Model/Result.png"/img>
 </p>
+
 The images enclosed in red boxes are unseen composition images that were never presented during the training phase.
