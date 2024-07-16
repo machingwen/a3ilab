@@ -31,3 +31,6 @@ Increasing $w$ produces images that are more typical but less diverse.
 <img width="600" src="ZappoSamples.png"/img>
 </p>
 The images enclosed in red boxes are unseen composition images that were never presented during the training phase.
+
+## 口試投影片
+[CCDM口試簡報.pptx](https://docs.google.com/presentation/d/1eJB9nlRuDY5F-Mr_HFynIzJ-vPhve-Tg/edit?usp=sharing&ouid=107572651849465881289&rtpof=true&sd=true)
