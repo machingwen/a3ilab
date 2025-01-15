@@ -1,0 +1,35 @@
+\chapter{Introduction}
+\label{chapter:intro}
+
+\section{Background}
+
+Hemodialysis is a life-sustaining treatment for patients with end-stage renal disease (ESRD), and vascular access dysfunction remains one of the most critical complications faced by these patients. In Taiwan, the global leader in the prevalence of dialysis patients, the early detection and management of vascular access dysfunction are paramount to ensuring treatment efficacy and patient survival. Traditional diagnostic methods, such as physical examinations and reliance on fixed flow rate thresholds provided by the KDOQI guidelines, have been the cornerstone for vascular access surveillance. However, these methods are limited in their ability to handle ambiguous cases or adapt to the nuanced variability in patient conditions, resulting in missed or delayed interventions.
+
+Advances in machine learning, particularly tree-based models like Decision Trees, Random Forests, and XGBoost, have demonstrated promise in structured data classification. By incorporating indeterminacy quantification and interpretability techniques, these models offer an opportunity to refine the decision-making process in clinical settings, providing more precise and adaptive diagnostic frameworks.
+
+\section{Motivation}
+
+Despite the well-established guidelines for vascular access management, challenges persist in predicting vascular access dysfunction with high confidence. The variability in patient-specific factors, the limitations of flow rate thresholds, and the absence of mechanisms to manage indeterminacy in ambiguous cases highlight the need for advanced methodologies. The integration of machine learning offers a pathway to address these challenges. However, most existing studies either focus solely on improving predictive accuracy or ignore the interpretability and indeterminacy of predictions. This gap motivates the need for a framework that not only enhances prediction reliability but also ensures that the decision-making process is transparent and actionable, particularly in high-stakes clinical environments.
+
+\section{Goal}
+
+The primary goal of this research is to develop an indeterminate-aware, tree-based machine learning framework for predicting vascular access dysfunction in dialysis patients. This framework seeks to address key limitations in traditional diagnostic methods by:
+
+\begin{itemize}
+    \item Incorporating indeterminacy quantification to manage ambiguous cases.
+    \item Applying machine learning models capable of providing clinically relevant predictions while maintaining a balance between accuracy and explainability.
+    \item Integrating clinical guidelines, such as KDOQI, with data-driven approaches to enhance diagnostic precision and adaptability.
+\end{itemize}
+
+This work aims to improve the timeliness and accuracy of interventions, ultimately contributing to better patient outcomes and resource allocation in healthcare settings.
+\newpage
+\section{Contribution}
+
+This research makes the following contributions:
+
+\begin{enumerate}
+  \item \textbf{Framework Development}: Proposing a novel indeterminate-aware framework based on tree-based models (Decision Trees, Random Forests, and XGBoost) for predicting vascular access dysfunction in hemodialysis patients. The framework integrates indeterminacy quantification, interpretability, and clinical relevance.
+  \item \textbf{Indeterminacy Quantification and Evaluation}: Introducing a multipass perturbation approach to quantify prediction indeterminacy, enabling the categorization of cases into determinate and indeterminate groups. Additionally, the study evaluates model performance using an extended confusion matrix, which incorporates new metrics such as leakage, overkill, indeterminacy, and imperfection to provide a comprehensive assessment of diagnostic outcomes.
+  \item \textbf{Integration of Clinical Knowledge and Real-World Validation}: Combining clinical guidelines, such as KDOQI thresholds, with machine learning techniques to create a data-driven approach that enhances diagnostic precision and adaptability. The proposed framework is validated using real-world datasets from clinical settings, demonstrating its effectiveness over existing guidelines and methodologies in terms of accuracy, robustness, and clinical relevance.
+  \item \textbf{Clinical Decision Support}: Providing a scalable decision-support tool that aligns with the needs of dialysis care by improving the timeliness and accuracy of interventions. This tool ensures that ambiguous cases are carefully flagged, reducing risks associated with misdiagnoses and unnecessary procedures.
+\end{enumerate}
