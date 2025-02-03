@@ -1,0 +1,34 @@
+name: gpce
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.8  # 你可以根據需要調整 Python 的版本
+  - pip
+  - numpy=1.23.5
+  - pandas=1.5.3
+  - pip:
+    - torch==1.11.0+cu113
+    - torchvision==0.12.0+cu113
+    - torchaudio==0.11.0
+    - scikit-learn>=0.24.0
+    - tensorboard
+    - tensorboardX
+    - selenium
+    - twder
+    - beautifulsoup4
+    - seaborn
+    - thop
+    - tqdm
+    - pytorch_metric_learning
+    - openpyxl
+    - natsort
+    - tensorboard_logger
+    - opencv-python
+    - bayesian-optimization==1.4.2
+    - pycave==3.1.3
+    - ipykernel
+    - gpytorch==1.8.1
+    - pytorch-ignite
+    - horovod[pytorch]
+
