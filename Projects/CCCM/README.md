@@ -42,4 +42,4 @@ Three supervision fusion strategies: StepFuse, LossFuse, Switch, each with sched
 5. For inference, use
    - `from models.engine import ConsisctencySampler`
    - `sampler = ConsisctencySampler(model, noise_scheduler, n_samples, args, device=device)`
-   - `images = sampler(c1, c2, x_t = x_t, num_inference_steps = num_inference_steps, guidance_scale = args.w + 1)`
+   - `images = sampler(c1, c2, x_t = torch.randn(n_samples, 3, 128, 128), num_inference_steps = num_inference_steps, guidance_scale = omega)`
