@@ -37,7 +37,7 @@ Three supervision fusion strategies: StepFuse, LossFuse, Switch, each with sched
    - Each image should be placed into a subdirectory named according to its attribute-object condition (e.g., BlondeHair_female, BlackHair_male, etc.)
    - If you are using a new dataset, please define a new class in `config.py` and follow the structure of the existing implementations.
 2. Download pretrained weights of the teacher model using `download_from_hub.py`.
-3. Start training by `accelerate launch train_script.py --data "" -- "dataset_nums_cond "" --save_path "" --epochs "" --train_batch_size "" --fuse_method "" --fuse_schedule "" --fuse_args ""`
+3. Start training by `accelerate launch train_script.py --data "" --dataset_nums_cond "" --save_path "" --epochs "" --train_batch_size "" --fuse_method "" --fuse_schedule "" --fuse_args ""`
 4. This script is modified from https://github.com/luosiallen/latent-consistency-model/tree/main/LCM_Training_Script/consistency_distillation/train_lcm_distill_sd_wds.py
 5. For inference, use
    - `from models.engine import ConsisctencySampler`
