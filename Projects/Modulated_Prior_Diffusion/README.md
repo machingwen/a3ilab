@@ -60,6 +60,7 @@ We evaluate our method on medical image segmentation datasets.
 - **KMU dataset**: clinical facial image dataset  
 
 All images are resized to a fixed resolution (e.g., 128 × 128) for training and evaluation.
+Below are example images and their corresponding segmentation masks from the datasets.
 
 <p align="center">
 <table>
