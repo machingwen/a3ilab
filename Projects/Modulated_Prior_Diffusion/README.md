@@ -51,3 +51,28 @@ The key difference lies in the initial distribution. Instead of using a standard
   <b>Inference</b><br>
   <img src="Inference_procedure.png" width="600">
 </p>
+
+## Dataset
+
+We evaluate our method on medical image segmentation datasets.
+
+- **ISIC**: a public dataset for skin lesion segmentation  
+- **KMU dataset**: clinical facial image dataset  
+
+All images are resized to a fixed resolution (e.g., 128 × 128) for training and evaluation.
+
+<p align="center">
+<table>
+  <tr>
+    <td align="center">
+      <b>ISIC</b><br>
+      <img src="ISIC_example.png" width="300">
+    </td>
+    <td align="center">
+      <b>KMU</b><br>
+      <img src="KMU_example.png" width="300">
+    </td>
+  </tr>
+</table>
+</p>
+
