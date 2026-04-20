@@ -12,7 +12,7 @@ $$
 
 - The reverse denoising process starts from a noisy sample that already contains conditioning information.
 
-![Denoising Process](MPD_process.pdf)
+![Denoising Process](MPD_process.png)
 
 ---
 
