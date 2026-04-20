@@ -15,8 +15,10 @@ $$
 <p align="center">
 <img src="MPD_process.png" width="700">
 </p>
-## Model Architecture
 
+## Model Architecture
+<p align="center">
 <img src="Model_architecture.png" width="700">
+</p>
 
 The initial noise is combined with the reference image to form a modulated prior, which serves as the starting point of the reverse denoising process.
