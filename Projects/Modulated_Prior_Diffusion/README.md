@@ -62,18 +62,17 @@ We evaluate our method on medical image segmentation datasets.
 All images are resized to a fixed resolution (e.g., 128 × 128) for training and evaluation.
 Below are example images and their corresponding segmentation masks from the datasets.
 
-<p align="center">
-<table>
-  <tr>
-    <td align="center">
-      <b>ISIC</b><br>
-      <img src="ISIC_example.png" width="200">
-    </td>
-    <td align="center">
-      <b>KMU</b><br>
-      <img src="KMU_example.png" width="200">
-    </td>
-  </tr>
-</table>
-</p>
-
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <b>ISIC</b><br>
+        <img src="assets/isic_example.png" width="300">
+      </td>
+      <td align="center">
+        <b>KMU</b><br>
+        <img src="assets/kmu_example.png" width="300">
+      </td>
+    </tr>
+  </table>
+</div>
