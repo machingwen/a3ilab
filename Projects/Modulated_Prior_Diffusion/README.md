@@ -16,3 +16,4 @@ $$
 
 
 ## Model architecture
+![Model_architecture](Model_architecture.png)
