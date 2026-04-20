@@ -4,9 +4,7 @@ MPD is a diffusion model that injects condition information by modulating the pr
 
 ## Key Idea
 
-MPD injects condition information by modulating the prior distribution, instead of using conditioning modules inside the network.
-
-Conceptually, the prior distribution is shifted toward the reference image:
+MPD injects condition information by modulating the prior distribution, shifting it toward the reference image:
 
 $$
 x_T \sim \mathcal{N}(x_r, I)
