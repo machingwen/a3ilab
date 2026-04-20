@@ -22,3 +22,16 @@ $$
 </p>
 
 The initial noise is combined with the reference image to form a modulated prior, which serves as the starting point of the reverse denoising process.
+
+## Condition Strength
+
+MPD introduces a condition strength parameter \( w \), which controls how much the reference image influences the prior distribution.
+
+The sampling of the initial noise is modified as:
+
+$$
+x_T \sim \mathcal{N}(w x_r, (1 - w) I)
+$$
+
+- Larger \( w \): stronger influence from the reference image  
+- Smaller \( w \): stronger influence from noise
