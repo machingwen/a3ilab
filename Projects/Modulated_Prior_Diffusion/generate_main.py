@@ -1,4 +1,4 @@
-# generate_MED_mymodel_CRF
+# generate_main
 
 import torch
 import torch.nn as nn
