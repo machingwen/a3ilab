@@ -35,3 +35,17 @@ $$
 
 - Larger \( w \): stronger influence from the reference image  
 - Smaller \( w \): stronger influence from noise
+
+## Training & Inference
+
+The training and inference procedures follow the standard diffusion framework.
+
+The key difference lies in the initial distribution. Instead of using a standard Gaussian distribution, MPD uses a modulated distribution that incorporates information from the reference image.
+
+<p align="center">
+  <img src="MPD_process.png" width="600">
+</p>
+
+<p align="center">
+  <img src="Model_architecture.png" width="600">
+</p>
