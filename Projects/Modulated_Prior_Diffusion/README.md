@@ -65,13 +65,13 @@ Below are example images and their corresponding segmentation masks from the dat
 <div align="center">
   <table>
     <tr>
-      <td align="center" valign="top">
-        <b>ISIC</b><br>
-        <img src="ISIC_example.png" width="200">
+      <td align="center" valign="middle">
+        <b>ISIC</b><br><br>
+        <img src="ISIC_example.png" height="350">
       </td>
-      <td align="center" valign="top">
-        <b>KMU</b><br>
-        <img src="KMU_example.png" width="200">
+      <td align="center" valign="middle">
+        <b>KMU</b><br><br>
+        <img src="KMU_example.png" height="350">
       </td>
     </tr>
   </table>
