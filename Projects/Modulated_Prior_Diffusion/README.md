@@ -4,13 +4,13 @@ MPD is a diffusion model that injects condition information by modulating the pr
 
 ## Key Idea
 
-MPD injects condition information by modulating the prior distribution, shifting it toward the reference image:
+- The reverse process is initialized from a modulated prior whose mean is shifted toward the reference image:
 
 $$
 x_T \sim \mathcal{N}(x_r, I)
 $$
 
-The reverse denoising process starts from noise that already contains information from the reference image.
+- The reverse denoising process starts from a noisy sample that already contains conditioning information.
 
 ![Denoising Process](assets/mpd_denoising.png)
 
