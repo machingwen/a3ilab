@@ -9,7 +9,7 @@ MPD injects condition information by modulating the prior distribution, instead 
 Conceptually, the prior distribution is shifted toward the reference image:
 
 $$
-x_T \sim \mathcal{N}(\text{mean influenced by } x_r, I)
+x_T \sim \mathcal{N}(x_r, I)
 $$
 
 The reverse denoising process starts from noise that already contains information from the reference image.
