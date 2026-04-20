@@ -44,10 +44,10 @@ The key difference lies in the initial distribution. Instead of using a standard
 
 <p align="center">
   <b>Training</b><br>
-  <img src="training.png" width="600">
+  <img src="training_procedure.png" width="600">
 </p>
 
 <p align="center">
   <b>Inference</b><br>
-  <img src="inference.png" width="600">
+  <img src="inference_procedure.png" width="600">
 </p>
