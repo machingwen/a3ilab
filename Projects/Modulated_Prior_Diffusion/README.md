@@ -13,10 +13,7 @@ $$
 - The reverse denoising process starts from a noisy sample that already contains conditioning information.
 
 ![MPD_process](MPD_process.png)
-
-
-## Model architecture
-![Model_architecture](Model_architecture.png)
+<img src="MPD_process.png" width="700">
 
 ## Model Architecture
 
