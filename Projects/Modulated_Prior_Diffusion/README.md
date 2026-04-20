@@ -14,6 +14,5 @@ $$
 
 ![MPD_process](MPD_process.png)
 
----
 
 ## Model architecture
