@@ -49,5 +49,5 @@ The key difference lies in the initial distribution. Instead of using a standard
 
 <p align="center">
   <b>Inference</b><br>
-  <img src="inference_procedure.png" width="600">
+  <img src="Inference_procedure.png" width="600">
 </p>
