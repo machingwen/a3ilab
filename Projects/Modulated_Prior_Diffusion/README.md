@@ -56,7 +56,7 @@ The key difference lies in the initial distribution. Instead of using a standard
 
 We evaluate our method on medical image segmentation datasets.
 
-- **ISIC**: a public dataset for skin lesion segmentation  
+- **ISIC dataset**: a public dataset for skin lesion segmentation  
 - **KMU dataset**: clinical facial image dataset  
 
 All images are resized to a fixed resolution (e.g., 128 × 128) for training and evaluation.
