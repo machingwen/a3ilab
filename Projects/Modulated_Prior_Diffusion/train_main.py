@@ -1,4 +1,4 @@
-#MED_train_weight_ISIC
+#train_main
 import torch 
 import torch.nn as nn
 import torch.nn.functional as F
