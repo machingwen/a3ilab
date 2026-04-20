@@ -66,11 +66,11 @@ All images are resized to a fixed resolution (e.g., 128 × 128) for training and
   <tr>
     <td align="center">
       <b>ISIC</b><br>
-      <img src="ISIC_example.png" width="300">
+      <img src="ISIC_example.png" width="200">
     </td>
     <td align="center">
       <b>KMU</b><br>
-      <img src="KMU_example.png" width="300">
+      <img src="KMU_example.png" width="200">
     </td>
   </tr>
 </table>
