@@ -42,17 +42,12 @@ The training and inference procedures follow the standard diffusion framework.
 
 The key difference lies in the initial distribution. Instead of using a standard Gaussian distribution, MPD uses a modulated distribution that incorporates information from the reference image.
 
-<table>
-  <tr>
-    <td width="120" align="right"><b>Training</b></td>
-    <td>
-      <img src="training.png" width="600">
-    </td>
-  </tr>
-  <tr>
-    <td width="120" align="right"><b>Inference</b></td>
-    <td>
-      <img src="inference.png" width="600">
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <b>Training</b><br>
+  <img src="training.png" width="600">
+</p>
+
+<p align="center">
+  <b>Inference</b><br>
+  <img src="inference.png" width="600">
+</p>
