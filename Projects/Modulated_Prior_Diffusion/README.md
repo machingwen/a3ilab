@@ -76,3 +76,47 @@ Below are example images and their corresponding segmentation masks from the dat
     </tr>
   </table>
 </div>
+
+## Usage
+---
+
+### Training
+
+Run the following command to start training:
+
+```bash
+python train_main.py
+```
+
+You can modify the training behavior by adjusting the arguments in the script, such as:
+
+- `--epochs`  
+- `--img_size`  
+- `--batch_size`  
+- `--lr`  
+
+Example:
+
+```bash
+python train_main.py \
+  --epochs 500 \
+  --img_size 128 \
+  --batch_size 4 \
+  --lr 5e-6
+```
+
+---
+
+### Inference
+
+Run the following command to perform inference:
+
+```bash
+python generate_main.py
+```
+
+After inference, it is recommended to apply post-processing to the generated segmentation results depending on the dataset.
+
+For example, techniques such as smoothing or CRF can be used to refine the segmentation masks.
+
+---
