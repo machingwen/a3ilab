@@ -25,7 +25,7 @@ from models.embedding import *
 from models.engine import  DDIMSampler, DDIMSamplerEncoder,DDIMSamplerImage 
 from dataset_test import CustomImageDatasetCondition_MPD, CustomSampler
 from utils import GradualWarmupScheduler, get_model, get_optimizer, get_piecewise_constant_schedule, get_linear_schedule_with_warmup, get_polynomial_decay_schedule_with_warmup, LoadEncoder
-from config import *
+#from config import *
 import cv2
 from scipy.ndimage import binary_fill_holes
 
