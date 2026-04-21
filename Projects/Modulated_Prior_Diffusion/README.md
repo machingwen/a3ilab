@@ -77,6 +77,7 @@ Below are example images and their corresponding segmentation masks from the dat
   </table>
 </div>
 
+
 ## Usage
 
 ### Training
@@ -87,12 +88,7 @@ Run the following command to start training:
 python train_main.py
 ```
 
-You can modify the training behavior by adjusting the arguments in the script, such as:
-
-- `--epochs`  
-- `--img_size`  
-- `--batch_size`  
-- `--lr`  
+You can modify the training settings by adjusting the arguments in the script, such as `--epochs`, `--img_size`, `--batch_size`, and `--lr`.
 
 Example:
 
