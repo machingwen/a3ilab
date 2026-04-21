@@ -27,21 +27,21 @@ from config import *
 
 
 
-def generate_ATR2IDX(defects):
-    """
-    根據 defects（瑕疵標籤）生成 ATR2IDX 字典，為每個唯一的 defect 分配一個索引
-    """
-    unique_atr = set(defects)
-    ATR2IDX = {atr: idx for idx, atr in enumerate(unique_atr)}
-    return ATR2IDX
+# def generate_ATR2IDX(defects):
+#     """
+#     根據 defects（瑕疵標籤）生成 ATR2IDX 字典，為每個唯一的 defect 分配一個索引
+#     """
+#     unique_atr = set(defects)
+#     ATR2IDX = {atr: idx for idx, atr in enumerate(unique_atr)}
+#     return ATR2IDX
 
-def generate_OBJ2IDX(images):
-    """
-    根據 defects（瑕疵標籤）生成 ATR2IDX 字典，為每個唯一的 defect 分配一個索引
-    """
-    unique_obj = set(images)
-    OBJ2IDX = {obj: idx for idx, obj in enumerate(unique_obj)}
-    return OBJ2IDX
+# def generate_OBJ2IDX(images):
+#     """
+#     根據 defects（瑕疵標籤）生成 ATR2IDX 字典，為每個唯一的 defect 分配一個索引
+#     """
+#     unique_obj = set(images)
+#     OBJ2IDX = {obj: idx for idx, obj in enumerate(unique_obj)}
+#     return OBJ2IDX
 
 def main(args):
     
