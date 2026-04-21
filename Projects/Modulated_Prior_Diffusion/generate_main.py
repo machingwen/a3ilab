@@ -122,7 +122,7 @@ for mpd_w in mpd_w_values:
     mpd_w = round(mpd_w, 1)
     model = get_model(args)
     epoch = 500
-    ckpt = torch.load(f"/workspace/Modulated_Prior_Diffusion/checkpoint2/MED_pth_w_ISIC/w_{mpd_w}_lr5.0e-06/model_epoch{epoch}_lr5.0e-06_w{mpd_w}.pth")["model"]
+    ckpt = torch.load(f"/workspace/Modulated_Prior_Diffusion/checkpoint/MED_pth_w_ISIC/w_{mpd_w}_lr5.0e-06/model_epoch{epoch}_lr5.0e-06_w{mpd_w}.pth")["model"]
     
 
 
