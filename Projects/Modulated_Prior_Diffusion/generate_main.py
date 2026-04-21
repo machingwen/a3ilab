@@ -1,4 +1,4 @@
-# generate_main_test
+# generate_main
 
 import torch
 import torch.nn as nn
