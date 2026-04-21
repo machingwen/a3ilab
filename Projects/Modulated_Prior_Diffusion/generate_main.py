@@ -185,7 +185,7 @@ for mpd_w in mpd_w_values:
 
 
     # 創建圖片儲存目錄
-    save_dir = f"/workspace/Modulated_Prior_Diffusion/generate_result_test/w_{mpd_w}"
+    save_dir = f"/workspace/Modulated_Prior_Diffusion/generate_result/w_{mpd_w}"
     os.makedirs(save_dir, exist_ok=True)
 
     # 刪除 .ipynb_checkpoints 目錄
