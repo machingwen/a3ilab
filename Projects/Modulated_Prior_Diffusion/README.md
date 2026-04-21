@@ -78,7 +78,6 @@ Below are example images and their corresponding segmentation masks from the dat
 </div>
 
 ## Usage
----
 
 ### Training
 
