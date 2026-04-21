@@ -115,3 +115,6 @@ After inference, it is recommended to apply post-processing to the generated seg
 For example, techniques such as smoothing or CRF can be used to refine the segmentation masks.
 
 ---
+### Notes
+
+- Ensure the dataset path is correctly configured before running the code.
