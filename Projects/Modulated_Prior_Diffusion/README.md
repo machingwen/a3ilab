@@ -117,4 +117,4 @@ For example, techniques such as smoothing or CRF can be used to refine the segme
 ---
 ### Notes
 
-- Ensure the dataset path is correctly configured before running the code.
+Ensure the dataset path is correctly configured before running the code.
