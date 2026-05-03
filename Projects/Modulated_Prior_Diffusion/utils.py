@@ -391,6 +391,7 @@ def get_scheduler(
 
 
 def get_model(args):
+    method = getattr(args, "method", "mpd")
     if args.arch == "unet":
         from models.unet import UNet
         model = UNet(
@@ -501,6 +502,10 @@ def get_model(args):
             concat=args.concat
         )
     
+    if method == "gpcd_concat":
+        from models.gpcd import GPCDConcatDownsizer
+        model = GPCDConcatDownsizer(model, in_channels=3)
+
     return model
 
 

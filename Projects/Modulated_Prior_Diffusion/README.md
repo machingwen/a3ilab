@@ -82,10 +82,56 @@ Below are example images and their corresponding segmentation masks from the dat
 
 ### Training
 
-Run the following command to start training:
+Quick server smoke test without a dataset or checkpoint:
 
 ```bash
-python train_main.py
+python train_main.py \
+  --smoke_test \
+  --method mpd \
+  --no_wandb \
+  --epochs 1 \
+  --batch_size 1 \
+  --num_workers 0 \
+  --img_size 16 \
+  --eval_interval 999999 \
+  --num_timestep 10 \
+  --steps 2 \
+  --emb_size 32 \
+  --channel_mult 1 \
+  --num_res_blocks 1 \
+  --num_heads 4 \
+  --projection_dim 64 \
+  --num_condition 1 1
+```
+
+```bash
+python train_main.py \
+  --smoke_test \
+  --method gpcd_concat \
+  --no_wandb \
+  --epochs 1 \
+  --batch_size 1 \
+  --num_workers 0 \
+  --img_size 16 \
+  --eval_interval 999999 \
+  --num_timestep 10 \
+  --steps 2 \
+  --emb_size 32 \
+  --channel_mult 1 \
+  --num_res_blocks 1 \
+  --num_heads 4 \
+  --projection_dim 64 \
+  --num_condition 1 1
+```
+
+Run the following command to start MPD training:
+
+```bash
+python train_main.py \
+  --method mpd \
+  --train_data_root /path/to/split_ISIC \
+  --eval_data_root /path/to/split_ISIC \
+  --no_wandb
 ```
 
 You can modify the training settings by adjusting the arguments in the script, such as `--epochs`, `--img_size`, `--batch_size`, and `--lr`.
@@ -94,20 +140,90 @@ Example:
 
 ```bash
 python train_main.py \
+  --method mpd \
+  --train_data_root /path/to/split_ISIC \
+  --eval_data_root /path/to/split_ISIC \
+  --no_wandb \
   --epochs 500 \
   --img_size 128 \
   --batch_size 4 \
   --lr 5e-6
 ```
 
+To train the GPCD concat-downsizer baseline:
+
+```bash
+python train_main.py \
+  --method gpcd_concat \
+  --train_data_root /path/to/split_ISIC \
+  --eval_data_root /path/to/split_ISIC \
+  --no_wandb \
+  --epochs 500 \
+  --img_size 128 \
+  --batch_size 4 \
+  --lr 5e-6
+```
+
+The `gpcd_concat` baseline keeps the U-Net denoiser backbone size unchanged. It samples Gaussian training noise, initializes inference from Gaussian noise, concatenates `x_t` with the reference image, and maps the concatenated tensor back to the denoiser input channels with `Conv3x3 + SiLU + Conv1x1`.
+
 ---
 
 ### Inference
 
-Run the following command to perform inference:
+Quick server smoke test without a dataset or checkpoint:
 
 ```bash
-python generate_main.py
+python generate_main.py \
+  --smoke_test \
+  --method mpd \
+  --steps 2 \
+  --smoke_samples 1 \
+  --img_size 16 \
+  --num_timestep 10 \
+  --emb_size 32 \
+  --channel_mult 1 \
+  --num_res_blocks 1 \
+  --num_heads 4 \
+  --projection_dim 64
+```
+
+```bash
+python generate_main.py \
+  --smoke_test \
+  --method gpcd_concat \
+  --steps 2 \
+  --smoke_samples 1 \
+  --img_size 16 \
+  --num_timestep 10 \
+  --emb_size 32 \
+  --channel_mult 1 \
+  --num_res_blocks 1 \
+  --num_heads 4 \
+  --projection_dim 64
+```
+
+Run the following command to perform MPD inference:
+
+```bash
+python generate_main.py \
+  --method mpd \
+  --data_root /path/to/split_ISIC \
+  --checkpoint_root /path/to/checkpoint/MED_pth_w_ISIC \
+  --output_dir /path/to/generate_result \
+  --epoch 500 \
+  --ckpt_lr 5.0e-06
+```
+
+To run inference with the GPCD concat-downsizer baseline:
+
+```bash
+python generate_main.py \
+  --method gpcd_concat \
+  --data_root /path/to/split_ISIC \
+  --checkpoint_root /path/to/checkpoint/MED_pth_w_ISIC \
+  --output_dir /path/to/generate_result \
+  --epoch 500 \
+  --ckpt_lr 5.0e-06
 ```
 
 After inference, it is recommended to apply post-processing to the generated segmentation results depending on the dataset.

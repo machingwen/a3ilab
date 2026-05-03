@@ -12,43 +12,72 @@ import pandas as pd
 import glob
 
 
+IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff")
+MASK_EXTENSIONS = (".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff")
+
+
+def _normalized_mask_stem(path):
+    stem = os.path.splitext(os.path.basename(path))[0]
+    for suffix in ("_segmentation", "_mask", "_gt", "_label", "_labels"):
+        if stem.endswith(suffix):
+            return stem[: -len(suffix)]
+    return stem
+
+
+def _list_images(path, extensions):
+    files = []
+    for ext in extensions:
+        files.extend(glob.glob(os.path.join(path, f"**/*{ext}"), recursive=True))
+        files.extend(glob.glob(os.path.join(path, f"**/*{ext.upper()}"), recursive=True))
+    return sorted(set(files))
+
+
+def _resolve_image_mask_dirs(data_root, dataset_type):
+    modern_img = os.path.join(data_root, "images")
+    modern_mask = os.path.join(data_root, "masks")
+    if os.path.isdir(modern_img) and os.path.isdir(modern_mask):
+        return modern_img, modern_mask
+
+    if dataset_type == "train":
+        return os.path.join(data_root, "train_original_80"), os.path.join(data_root, "train_crop_80")
+    if dataset_type == "test":
+        return os.path.join(data_root, "test_original_20"), os.path.join(data_root, "test_crop_20")
+    raise ValueError("dataset_type 必須是 'train' 或 'test'")
+
+
+def _pair_image_mask_files(img_path, gt_path):
+    image_files = _list_images(img_path, IMAGE_EXTENSIONS)
+    mask_files = _list_images(gt_path, MASK_EXTENSIONS)
+    images_by_stem = {os.path.splitext(os.path.basename(path))[0]: path for path in image_files}
+    pairs = []
+    for mask_file in mask_files:
+        key = _normalized_mask_stem(mask_file)
+        image_file = images_by_stem.get(key)
+        if image_file is not None:
+            pairs.append((image_file, mask_file, key))
+    return pairs
+
+
 
 class CustomImageDatasetCondition_MPD(Dataset):
     def __init__(self, data_root, dataset_type, transform):
         self.data_root = data_root
-        if dataset_type == "train":
-            self.gt_path = os.path.join(data_root, "train_crop_80")  
-            self.img_path = os.path.join(data_root, "train_original_80")  
-        elif dataset_type == "test":
-            self.gt_path = os.path.join(data_root, "test_crop_20")  
-            self.img_path = os.path.join(data_root, "test_original_20")
-        else:
-            raise ValueError("dataset_type 必須是 'train' 或 'test'")
-        
+        self.img_path, self.gt_path = _resolve_image_mask_dirs(data_root, dataset_type)
         self.transform = transform
         self.obj_dict = {}
-        
-        # 這一行是必需的來正確初始化 gt_path_files
-        self.gt_path_files = sorted(
-            glob.glob(os.path.join(self.gt_path, "**/*.PNG"), recursive=True)
-        )
-        self.gt_path_files = [
-            file
-            for file in self.gt_path_files
-            if os.path.isfile(os.path.join(self.img_path, os.path.basename(file)))
-        ]
-        # 從 img_path 中取得原始圖片檔案名稱列表
-        self.img_path_files = sorted(glob.glob(os.path.join(self.img_path, "*.PNG")))  # 假設副檔名為 .PNG
+        self.pairs = _pair_image_mask_files(self.img_path, self.gt_path)
+        self.img_path_files = [pair[0] for pair in self.pairs]
+        self.gt_path_files = [pair[1] for pair in self.pairs]
                     
                 
     def __len__(self):
         # 返回數據集大小，即 CSV 檔案中有多少筆資料
-        return len(self.gt_path_files)
+        return len(self.pairs)
 
     def __getitem__(self, index):        
-        img_name = os.path.basename(self.gt_path_files[index])
-        img = Image.open(os.path.join(self.img_path, img_name)).convert("RGB")
-        gt = Image.open(os.path.join(self.gt_path, img_name)).convert('RGB') #原來我的模型的
+        img_file, gt_file, stem = self.pairs[index]
+        img = Image.open(img_file).convert("RGB")
+        gt = Image.open(gt_file).convert('RGB') #原來我的模型的
         #gt = Image.open(os.path.join(self.gt_path, img_name)).convert('L') #給segdiff的
         if self.transform is not None:
             image_input = self.transform(img)
@@ -56,7 +85,7 @@ class CustomImageDatasetCondition_MPD(Dataset):
         
         return {"input_image": image_input, 
                 "groundtruth_image": image_groundtruth,
-                "filename": img_name.split('.')[0]
+                "filename": stem
                }
 
 """

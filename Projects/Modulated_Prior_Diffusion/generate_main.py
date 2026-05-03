@@ -9,13 +9,12 @@ from torchvision.utils import save_image
 import shutil
 from typing import Tuple
 import argparse
+import os
+os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 from tqdm import tqdm
-import os
-import wandb
-from accelerate import Accelerator
 from collections import OrderedDict
 import pandas as pd
 from scipy import ndimage as ndi
@@ -28,15 +27,18 @@ import scipy.ndimage as ndi
 
 
 from models.embedding import *
-from models.engine import ConditionalGaussianDiffusionTrainer, ConditionalDiffusionEncoderTrainer, DDIMSampler, DDIMSamplerEncoder,ImageConditionalGaussianDiffusionTrainer,DDIMSamplerImage 
+from models.engine import ConditionalGaussianDiffusionTrainer, ConditionalDiffusionEncoderTrainer, DDIMSampler, DDIMSamplerEncoder,ImageConditionalGaussianDiffusionTrainer,DDIMSamplerImage,DDIMSamplerImageGPCDConcat 
 #from dataset import CustomImageDataset, CustomSampler
 from dataset_test import CustomImageDatasetCondition_MPD, CustomSampler
 from utils import GradualWarmupScheduler, get_model, get_optimizer, get_piecewise_constant_schedule, get_linear_schedule_with_warmup, get_polynomial_decay_schedule_with_warmup, LoadEncoder
-import cv2
 from scipy.ndimage import binary_fill_holes
 
-import pydensecrf.densecrf as dcrf
-from pydensecrf.utils import unary_from_softmax
+try:
+    import pydensecrf.densecrf as dcrf
+    from pydensecrf.utils import unary_from_softmax
+except ImportError:
+    dcrf = None
+    unary_from_softmax = None
 
 
 def apply_crf(img, prob_map):
@@ -46,6 +48,8 @@ def apply_crf(img, prob_map):
     prob_map: soft mask (H, W), 值域 [0,1]
     回傳 refined mask (H, W)，值為 {0,1}
     """
+    if dcrf is None or unary_from_softmax is None:
+        raise ImportError("pydensecrf is required for CRF post-processing. Install it or use --smoke_test.")
     # 這兩行是關鍵
     img = np.ascontiguousarray(img, dtype=np.uint8)       # 確保原圖 C-contiguous
     #soft_mask = np.ascontiguousarray(prob_map, dtype=np.float32)  # 確保 soft mask C-contiguous
@@ -88,6 +92,7 @@ def apply_crf(img, prob_map):
 
 class Args(argparse.Namespace):
     arch = "unetattention_image"
+    method = "mpd"
     img_size = 128
     num_timestep = 1000
     beta = (0.0001, 0.02)
@@ -110,35 +115,100 @@ class Args(argparse.Namespace):
     eval_batch_size = 8
     num_workers = 4
     ignored = None
+    data_root = "/workspace/Modulated_Prior_Diffusion/split_ISIC/"
+    checkpoint_root = "/workspace/Modulated_Prior_Diffusion/checkpoint/MED_pth_w_ISIC"
+    output_dir = "/workspace/Modulated_Prior_Diffusion/generate_result"
+    checkpoint_path = None
+    epoch = 500
+    ckpt_lr = "5.0e-06"
+    smoke_test = False
+    smoke_samples = 2
+    no_wandb = False
 
 # 初始化裝置和參數
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 args = Args()
+parser = argparse.ArgumentParser()
+parser.add_argument("--method", type=str, default=args.method, choices=["mpd", "gpcd_concat"], help="conditioning method")
+parser.add_argument("--data_root", type=str, default=args.data_root, help="test dataset root")
+parser.add_argument("--checkpoint_root", type=str, default=args.checkpoint_root, help="root directory containing method checkpoints")
+parser.add_argument("--checkpoint_path", type=str, default=args.checkpoint_path, help="explicit checkpoint path")
+parser.add_argument("--output_dir", type=str, default=args.output_dir, help="directory for generated outputs")
+parser.add_argument("--epoch", type=int, default=args.epoch, help="checkpoint epoch")
+parser.add_argument("--ckpt_lr", type=str, default=args.ckpt_lr, help="learning-rate string used in checkpoint filenames")
+parser.add_argument("--img_size", type=int, default=args.img_size, help="inference image size")
+parser.add_argument("--num_timestep", type=int, default=args.num_timestep, help="number of diffusion timesteps")
+parser.add_argument("--steps", type=int, default=args.steps, help="DDIM sampling steps")
+parser.add_argument("--eval_batch_size", type=int, default=args.eval_batch_size, help="evaluation batch size")
+parser.add_argument("--num_workers", type=int, default=args.num_workers, help="number of dataloader workers")
+parser.add_argument("--emb_size", type=int, default=args.emb_size, help="embedding output dimension")
+parser.add_argument("--channel_mult", type=int, nargs="+", default=args.channel_mult, help="width of unet model")
+parser.add_argument("--num_res_blocks", type=int, default=args.num_res_blocks, help="number of residual blocks")
+parser.add_argument("--projection_dim", type=int, default=args.projection_dim, help="attention projection dimension")
+parser.add_argument("--num_heads", type=int, default=args.num_heads, help="number of attention heads")
+parser.add_argument("--num_head_channels", type=int, default=args.num_head_channels, help="attention head channels")
+parser.add_argument("--smoke_test", action="store_true", help="run a tiny synthetic inference smoke test without a checkpoint")
+parser.add_argument("--smoke_samples", type=int, default=args.smoke_samples, choices=[1, 2, 3, 4], help="number of synthetic smoke-test samples")
+parser.add_argument("--no_wandb", action="store_true", help="disable wandb logging")
+cli_args, _ = parser.parse_known_args()
+args.method = cli_args.method
+args.data_root = cli_args.data_root
+args.checkpoint_root = cli_args.checkpoint_root
+args.checkpoint_path = cli_args.checkpoint_path
+args.output_dir = cli_args.output_dir
+args.epoch = cli_args.epoch
+args.ckpt_lr = cli_args.ckpt_lr
+args.img_size = cli_args.img_size
+args.num_timestep = cli_args.num_timestep
+args.steps = cli_args.steps
+args.eval_batch_size = cli_args.eval_batch_size
+args.num_workers = cli_args.num_workers
+args.emb_size = cli_args.emb_size
+args.channel_mult = cli_args.channel_mult
+args.num_res_blocks = cli_args.num_res_blocks
+args.projection_dim = cli_args.projection_dim
+args.num_heads = cli_args.num_heads
+args.num_head_channels = cli_args.num_head_channels
+args.smoke_test = cli_args.smoke_test
+args.smoke_samples = cli_args.smoke_samples
+args.no_wandb = cli_args.no_wandb
 #mpd_w_values = [round(0.1 * i, 1) for i in range(0, 11)]
-mpd_w_values = [0.9]
+mpd_w_values = [0.9] if args.method == "mpd" else [None]
 
 for mpd_w in mpd_w_values:
 # 加載模型
-    mpd_w = round(mpd_w, 1)
+    if args.method == "mpd":
+        mpd_w = round(mpd_w, 1)
     model = get_model(args)
-    epoch = 500
-    ckpt = torch.load(f"/workspace/Modulated_Prior_Diffusion/checkpoint/MED_pth_w_ISIC/w_{mpd_w}_lr5.0e-06/model_epoch{epoch}_lr5.0e-06_w{mpd_w}.pth")["model"]
+    epoch = args.epoch
+    if args.checkpoint_path is not None:
+        ckpt_path = args.checkpoint_path
+    elif args.method == "mpd":
+        ckpt_path = os.path.join(args.checkpoint_root, f"w_{mpd_w}_lr{args.ckpt_lr}", f"model_epoch{epoch}_lr{args.ckpt_lr}_w{mpd_w}.pth")
+    else:
+        ckpt_path = os.path.join(args.checkpoint_root, f"{args.method}_lr{args.ckpt_lr}", f"model_epoch{epoch}_lr{args.ckpt_lr}_{args.method}.pth")
+    if args.smoke_test:
+        print("smoke_test=True; skipping checkpoint load.")
+        ckpt = None
+    else:
+        ckpt = torch.load(ckpt_path, map_location=device)["model"]
     
 
 
 
-    new_dict = OrderedDict()
-    for k, v in ckpt.items():
-        if k.startswith("module"):
-            new_dict[k[7:]] = v
-        else:
-            new_dict[k] = v
+    if ckpt is not None:
+        new_dict = OrderedDict()
+        for k, v in ckpt.items():
+            if k.startswith("module"):
+                new_dict[k[7:]] = v
+            else:
+                new_dict[k] = v
 
-    try:
-        model.load_state_dict(new_dict)
-        print("All keys successfully match")
-    except:
-        print("some keys are missing!")
+        try:
+            model.load_state_dict(new_dict)
+            print("All keys successfully match")
+        except:
+            print("some keys are missing!")
 
     for p in model.parameters():
         p.requires_grad = False
@@ -147,6 +217,10 @@ for mpd_w in mpd_w_values:
 
     model.eval()
     model.to(device)
+    denoiser = model.denoiser if hasattr(model, "denoiser") else model
+    denoiser_params = sum(p.numel() for p in denoiser.parameters())
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"method={args.method} denoiser_params={denoiser_params:,} total_params={total_params:,}")
 
     sampler = DDIMSamplerImage(
         model=model,
@@ -154,8 +228,15 @@ for mpd_w in mpd_w_values:
         T=args.num_timestep,
         w=args.w,
     ).to(device)
+    if args.method == "gpcd_concat":
+        sampler = DDIMSamplerImageGPCDConcat(
+            model=model,
+            beta=args.beta,
+            T=args.num_timestep,
+            w=args.w,
+        ).to(device)
 
-    if args.encoder_path is not None:
+    if args.encoder_path is not None and args.method == "mpd":
         encoder = LoadEncoder(args).to(device)
         sampler = DDIMSamplerEncoder(
             model=model,
@@ -175,8 +256,25 @@ for mpd_w in mpd_w_values:
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     ])
 
+    if args.smoke_test:
+        B = args.smoke_samples
+        C = 3
+        H = args.img_size
+        W = args.img_size
+        c2_image = torch.randn(B, C, H, W, device=device)
+        x_i = torch.randn(B, C, H, W, device=device)
+        if args.method == "mpd":
+            x_i = (1 - mpd_w) * x_i + mpd_w * c2_image
+            x0_all = sampler(x_i, steps=args.steps)
+        else:
+            x0_all = sampler(x_i, c2_image, steps=args.steps)
+        print(f"smoke_test output shape: {tuple(x0_all.shape)}")
+        raise SystemExit(0)
+
     # 構建數據加載器
-    valid_ds = CustomImageDatasetCondition_MPD(data_root="/workspace/Modulated_Prior_Diffusion/split_ISIC/", dataset_type="test", transform=transform)
+    valid_ds = CustomImageDatasetCondition_MPD(data_root=args.data_root, dataset_type="test", transform=transform)
+    if len(valid_ds) == 0:
+        raise ValueError(f"No evaluation samples found under {args.data_root}")
     dataloader_val = DataLoader(valid_ds, batch_size=args.eval_batch_size, shuffle=False, num_workers=args.num_workers)
 
     # 從數據加載器中獲取一個批次的數據
@@ -185,7 +283,7 @@ for mpd_w in mpd_w_values:
 
 
     # 創建圖片儲存目錄
-    save_dir = f"/workspace/Modulated_Prior_Diffusion/generate_result/w_{mpd_w}"
+    save_dir = os.path.join(args.output_dir, f"w_{mpd_w}" if args.method == "mpd" else args.method)
     os.makedirs(save_dir, exist_ok=True)
 
     # 刪除 .ipynb_checkpoints 目錄
@@ -204,10 +302,14 @@ for mpd_w in mpd_w_values:
         # 一次生成 num_generations * B 張
         x_i = torch.randn(num_generations * B, C, H, W).to(device)
         c2_image_repeat = c2_image.repeat(num_generations, 1, 1, 1)
-        x_i = (1 - mpd_w) * x_i + mpd_w * c2_image_repeat
+        if args.method == "mpd":
+            x_i = (1 - mpd_w) * x_i + mpd_w * c2_image_repeat
 
         # Sampling
-        x0_all = sampler(x_i, steps=args.steps)
+        if args.method == "mpd":
+            x0_all = sampler(x_i, steps=args.steps)
+        else:
+            x0_all = sampler(x_i, c2_image_repeat, steps=args.steps)
         x0_mask_logit = x0_all.mean(dim=1, keepdim=True)   # (N,1,H,W)
         x0_mask_prob  = torch.sigmoid(x0_mask_logit)       # (N,1,H,W)
 
@@ -325,9 +427,10 @@ for mpd_w in mpd_w_values:
                 })
 
             # 儲存 Mask 圖與可視化圖
-            masks_dir = os.path.join(save_dir, f"masks_{mpd_w}")
+            masks_dir = os.path.join(save_dir, f"masks_{mpd_w}" if args.method == "mpd" else f"masks_{args.method}")
             os.makedirs(masks_dir, exist_ok=True)
-            mask_save_path = os.path.join(masks_dir, f"{filename}_mask_{mpd_w}.PNG")
+            mask_suffix = str(mpd_w) if args.method == "mpd" else args.method
+            mask_save_path = os.path.join(masks_dir, f"{filename}_mask_{mask_suffix}.PNG")
             Image.fromarray(x0_union_resized_np).save(mask_save_path)
             print(f"Saved mask to: {mask_save_path}")
 
@@ -344,11 +447,13 @@ for mpd_w in mpd_w_values:
             axes[3].imshow(skin_applied_result)
             axes[3].set_title("Output")
             axes[3].axis("off")
-            plt.savefig(f"{save_dir}/{filename}_generated_w{mpd_w}.PNG")
+            generated_suffix = f"w{mpd_w}" if args.method == "mpd" else args.method
+            plt.savefig(f"{save_dir}/{filename}_generated_{generated_suffix}.PNG")
             plt.close(fig)
 
 # 儲存 CSV
 results_df = pd.DataFrame(results)
-csv_output_path = os.path.join(save_dir, f"pigmentation_scores_w{mpd_w}.csv")
+csv_suffix = f"w{mpd_w}" if args.method == "mpd" else args.method
+csv_output_path = os.path.join(save_dir, f"pigmentation_scores_{csv_suffix}.csv")
 results_df.to_csv(csv_output_path, index=False)
 print(f"Saved scores to CSV at {csv_output_path}")

@@ -10,21 +10,64 @@ from torchvision.utils import save_image
 #import shutil
 from typing import Tuple
 import argparse
+import os
+os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
-import os
-import wandb
-from accelerate import Accelerator
+from torch.utils.data import Subset
 
 
 from models.embedding import *
-from models.engine import ConditionalGaussianDiffusionTrainer, ConditionalDiffusionEncoderTrainer, DDIMSampler, DDIMSamplerEncoder,ImageConditionalGaussianDiffusionTrainer,DDIMSamplerImage,ImageConditionalGaussianDiffusionTrainer_w 
+from models.engine import ConditionalGaussianDiffusionTrainer, ConditionalDiffusionEncoderTrainer, DDIMSampler, DDIMSamplerEncoder,ImageConditionalGaussianDiffusionTrainer,DDIMSamplerImage,ImageConditionalGaussianDiffusionTrainer_w,GPCDConcatGaussianDiffusionTrainer,DDIMSamplerImageGPCDConcat 
 
 from dataset_test import CustomImageDatasetCondition_MPD, CustomSampler
 from utils import GradualWarmupScheduler, get_model, get_optimizer, get_piecewise_constant_schedule, get_linear_schedule_with_warmup, get_polynomial_decay_schedule_with_warmup, LoadEncoder
 #from config import *
 
+
+try:
+    import wandb
+except ImportError:
+    wandb = None
+
+
+class NoOpAccelerator:
+    def prepare(self, *args):
+        return args
+
+    def backward(self, loss):
+        loss.backward()
+
+
+class SmokeImagePairDataset(torch.utils.data.Dataset):
+    def __init__(self, num_samples, img_size):
+        self.num_samples = num_samples
+        self.img_size = img_size
+
+    def __len__(self):
+        return self.num_samples
+
+    def __getitem__(self, index):
+        return {
+            "input_image": torch.randn(3, self.img_size, self.img_size),
+            "groundtruth_image": torch.randn(3, self.img_size, self.img_size),
+            "filename": f"smoke_{index}",
+        }
+
+
+def maybe_limit_dataset(dataset, limit):
+    if limit is None:
+        return dataset
+    return Subset(dataset, list(range(min(limit, len(dataset)))))
+
+
+def setup_wandb(args):
+    if args.no_wandb or wandb is None:
+        if wandb is None and not args.no_wandb:
+            print("wandb is not installed; logging disabled.")
+        return None
+    return wandb
 
 
 # def generate_ATR2IDX(defects):
@@ -61,7 +104,8 @@ def main(args):
 #         job_type="training"
 #     )
     
-    accelerator = Accelerator()
+    wb = setup_wandb(args)
+    accelerator = NoOpAccelerator()
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -73,17 +117,31 @@ def main(args):
     ])
     
     
-    train_ds = CustomImageDatasetCondition_MPD(data_root="/workspace/chiu.li/split_ISIC", dataset_type="train", transform=transform)
+    if args.smoke_test:
+        train_ds = SmokeImagePairDataset(args.smoke_samples, args.img_size)
+    else:
+        train_ds = CustomImageDatasetCondition_MPD(data_root=args.train_data_root, dataset_type="train", transform=transform)
+        train_ds = maybe_limit_dataset(train_ds, args.max_train_samples)
+        if len(train_ds) == 0:
+            raise ValueError(f"No training samples found under {args.train_data_root}")
     dataloader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
 
     #w_values = [0.1 * i for i in range(5, 10)]
-    mpd_w_values = [round(0.1 * i, 1) for i in range(0, 11)]
+    if args.method == "mpd":
+        if args.mpd_w_values is not None:
+            mpd_w_values = args.mpd_w_values
+        else:
+            mpd_w_values = [0.5] if args.smoke_test else [round(0.1 * i, 1) for i in range(0, 11)]
+    else:
+        mpd_w_values = [None]
     
     for mpd_w in mpd_w_values:
     
         # define models
         model = get_model(args)
         trainer = ImageConditionalGaussianDiffusionTrainer_w(model, args.beta, args.num_timestep)
+        if args.method == "gpcd_concat":
+            trainer = GPCDConcatGaussianDiffusionTrainer(model, args.beta, args.num_timestep)
         # optimizer and learning rate scheduler
         optimizer = get_optimizer(model, args)
 
@@ -93,8 +151,20 @@ def main(args):
             T=args.num_timestep,
             w=args.w
         )
+        if args.method == "gpcd_concat":
+            sampler = DDIMSamplerImageGPCDConcat(
+                model,
+                beta=args.beta,
+                T=args.num_timestep,
+                w=args.w
+            )
 
-        if args.encoder_path != None:
+        denoiser = model.denoiser if hasattr(model, "denoiser") else model
+        denoiser_params = sum(p.numel() for p in denoiser.parameters())
+        total_params = sum(p.numel() for p in model.parameters())
+        print(f"method={args.method} denoiser_params={denoiser_params:,} total_params={total_params:,}")
+
+        if args.encoder_path != None and args.method == "mpd":
             encoder = LoadEncoder(args)
             trainer = ConditionalDiffusionEncoderTrainer(
                 encoder = encoder,
@@ -113,6 +183,10 @@ def main(args):
                 only_encoder = args.only_encoder
             )
 
+        model = model.to(device)
+        trainer = trainer.to(device)
+        sampler = sampler.to(device)
+
         cosineScheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
             optimizer=optimizer, 
             T_max=args.epochs, 
@@ -124,16 +198,16 @@ def main(args):
             warmUpScheduler = GradualWarmupScheduler(
             optimizer=optimizer, 
             multiplier=2.5,
-            warm_epoch=args.epochs // 10, 
+            warm_epoch=max(1, args.epochs // 10), 
             after_scheduler=cosineScheduler
             )
         elif args.lr_schedule == "piecewise":
             warmUpScheduler = get_piecewise_constant_schedule(optimizer, "1:30,0.1:60,0.05")
 
         elif args.lr_schedule == "linear":
-            warmUpScheduler = get_linear_schedule_with_warmup(optimizer, args.epochs // 10, args.epochs)
+            warmUpScheduler = get_linear_schedule_with_warmup(optimizer, max(1, args.epochs // 10), args.epochs)
         elif args.lr_schedule == "polynomial":
-            warmUpScheduler = get_polynomial_decay_schedule_with_warmup(optimizer, args.epochs // 10, args.epochs)
+            warmUpScheduler = get_polynomial_decay_schedule_with_warmup(optimizer, max(1, args.epochs // 10), args.epochs)
 
 
         dataloader, model, trainer, sampler, optimizer = accelerator.prepare(dataloader, model, trainer, sampler, optimizer)
@@ -151,7 +225,10 @@ def main(args):
                 input_images = batch["input_image"].to(device)  # 展開圖像
                 B = x.size()[0]
 
-                loss = trainer(x, input_images, mpd_w=mpd_w).sum() / B ** 2.
+                if args.method == "mpd":
+                    loss = trainer(x, input_images, mpd_w=mpd_w).sum() / B ** 2.
+                else:
+                    loss = trainer(x, input_images).sum() / B ** 2.
                 accelerator.backward(loss)
                 torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
 
@@ -178,14 +255,24 @@ def main(args):
                 # sample random noise
                 #if args.onePic_oneCond:
                 n_samples = args.eval_batch_size
-                valid_ds  =CustomImageDatasetCondition_MPD(data_root="/workspace/chiu.li/split_ISIC", dataset_type="test", transform=transform)
+                if args.smoke_test:
+                    valid_ds = SmokeImagePairDataset(args.smoke_samples, args.img_size)
+                else:
+                    valid_ds = CustomImageDatasetCondition_MPD(data_root=args.eval_data_root, dataset_type="test", transform=transform)
+                    valid_ds = maybe_limit_dataset(valid_ds, args.max_eval_samples)
+                    if len(valid_ds) == 0:
+                        raise ValueError(f"No evaluation samples found under {args.eval_data_root}")
                 dataloader_val = DataLoader(valid_ds, batch_size=args.eval_batch_size, shuffle=True, num_workers=args.num_workers)
                 _ ,x_sample = next(enumerate(dataloader_val))
                 x_i = torch.randn(n_samples, *size).to(device)
                 c2_image = x_sample["input_image"].to(device)
-                x_i = (1-mpd_w) * x_i + mpd_w * c2_image
+                if args.method == "mpd":
+                    x_i = (1-mpd_w) * x_i + mpd_w * c2_image
 
-                x0 = sampler(x_i, steps=args.steps)
+                if args.method == "mpd":
+                    x0 = sampler(x_i, steps=args.steps)
+                else:
+                    x0 = sampler(x_i, c2_image, steps=args.steps)
                 x0 = x0 * 0.5 + 0.5
 
                 # save image
@@ -210,18 +297,21 @@ def main(args):
 #                     'optimizer': optimizer.state_dict(),
 #                 }, os.path.join(save_root, f"model_epoch{eval_epoch}_lr{args.lr:.1e}_full.pth"))
 
-                result_dir = os.path.join('result', args.exp, f"w_{mpd_w:.1f}_lr{args.lr:.1e}")
+                method_dir = f"w_{mpd_w:.1f}_lr{args.lr:.1e}" if args.method == "mpd" else f"{args.method}_lr{args.lr:.1e}"
+                result_dir = os.path.join('result', args.exp, method_dir)
                 os.makedirs(result_dir, exist_ok=True)
-                save_image(output, os.path.join(result_dir, f'epoch{eval_epoch}_lr{args.lr:.1e}_w{mpd_w:.1f}_image.png'))
+                image_name = f'epoch{eval_epoch}_lr{args.lr:.1e}_w{mpd_w:.1f}_image.png' if args.method == "mpd" else f'epoch{eval_epoch}_lr{args.lr:.1e}_{args.method}_image.png'
+                save_image(output, os.path.join(result_dir, image_name))
 
                 # 儲存模型
-                save_root = os.path.join('checkpoint', args.exp, f"w_{mpd_w:.1f}_lr{args.lr:.1e}")
+                save_root = os.path.join('checkpoint', args.exp, method_dir)
                 os.makedirs(save_root, exist_ok=True)
+                ckpt_name = f"model_epoch{eval_epoch}_lr{args.lr:.1e}_w{mpd_w:.1f}.pth" if args.method == "mpd" else f"model_epoch{eval_epoch}_lr{args.lr:.1e}_{args.method}.pth"
                 torch.save({
                     'epoch': epoch,
                     'model': model.state_dict(),
                     'optimizer': optimizer.state_dict(),
-                }, os.path.join(save_root, f"model_epoch{eval_epoch}_lr{args.lr:.1e}_w{mpd_w:.1f}.pth"))
+                }, os.path.join(save_root, ckpt_name))
 
                 
 
@@ -231,7 +321,6 @@ def main(args):
 
 if __name__ == '__main__':
     os.environ["CUDA_VISIBLE_DEVICES"]='0'
-    os.system("rm -rf /root/notebooks/nfs/work/daniel_chou/CDDIM/data/phison/.ipynb_checkpoints")
     parser = argparse.ArgumentParser()
     #nfs/work/daniel_chou/CDDIM/data/phison
     # General Hyperparameters 
@@ -271,8 +360,17 @@ if __name__ == '__main__':
     parser.add_argument('--exp', type=str, default='MED_pth_w_ISIC', help='experiment directory name')
     parser.add_argument('--dir', type=str, default='MED_image', help='model weight directory')
     parser.add_argument('--sample_method', type=str, default='ddim', choices=['ddpm', 'ddim'], help='sampling method')
+    parser.add_argument('--method', type=str, default='mpd', choices=['mpd', 'gpcd_concat'], help='conditioning method')
     parser.add_argument('--steps', type=int, default=100, help='decreased timesteps using ddim')
     parser.add_argument('--drop_prob', type=float, default=0.15, help='probability of dropping label when training diffusion model')
+    parser.add_argument('--train_data_root', type=str, default='/workspace/chiu.li/split_ISIC', help='training dataset root')
+    parser.add_argument('--eval_data_root', type=str, default='/workspace/chiu.li/split_ISIC', help='evaluation dataset root')
+    parser.add_argument('--max_train_samples', type=int, default=None, help='optional limit for training samples')
+    parser.add_argument('--max_eval_samples', type=int, default=None, help='optional limit for evaluation samples')
+    parser.add_argument('--smoke_test', action='store_true', help='run a tiny synthetic train/eval smoke test')
+    parser.add_argument('--smoke_samples', type=int, default=2, choices=[1, 2, 3, 4], help='number of synthetic smoke-test samples')
+    parser.add_argument('--no_wandb', action='store_true', help='disable wandb logging')
+    parser.add_argument('--mpd_w_values', type=float, nargs='+', default=None, help='optional MPD w values; default keeps the original 0.0 to 1.0 sweep')
     
     # UNet hyperparameters
     parser.add_argument('--num_res_blocks', type=int, default=2, help='number of residual blocks in unet')
@@ -281,7 +379,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_condition', type=int, nargs='+', help='number of classes in each condition')  
     parser.add_argument('--concat', action="store_true", help="concat label embedding before CA")
     parser.add_argument('--use_spatial_transformer', action="store_true", help="use transfomer based model to do attention")
-    parser.add_argument('--channel_mult', type=list, default=[1, 2, 2, 2], help='width of unet model')
+    parser.add_argument('--channel_mult', type=int, nargs='+', default=[1, 2, 2, 2], help='width of unet model')
    
     # Transformer hyperparameters(Optional)
     parser.add_argument('--projection_dim', type=int, default=512, help='q, k, v dimension in attention layer')
