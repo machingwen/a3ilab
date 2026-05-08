@@ -73,11 +73,22 @@ def main(args):
     ])
     
     
-    train_ds = CustomImageDatasetCondition_MPD(data_root="/workspace/chiu.li/split_ISIC", dataset_type="train", transform=transform)
-    dataloader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
+    pin_memory = device.type == "cuda"
+    loader_kwargs = {
+        "num_workers": args.num_workers,
+        "pin_memory": pin_memory,
+    }
+    if args.num_workers > 0:
+        loader_kwargs["persistent_workers"] = True
+
+    train_ds = CustomImageDatasetCondition_MPD(data_root="/work/macw1030/isic_mpd_png", dataset_type="train", transform=transform)
+    dataloader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, **loader_kwargs)
+    valid_ds = CustomImageDatasetCondition_MPD(data_root="/work/macw1030/isic_mpd_png", dataset_type="test", transform=transform)
+    dataloader_val = DataLoader(valid_ds, batch_size=args.eval_batch_size, shuffle=True, **loader_kwargs)
 
     #w_values = [0.1 * i for i in range(5, 10)]
-    mpd_w_values = [round(0.1 * i, 1) for i in range(0, 11)]
+    #mpd_w_values = [round(0.1 * i, 1) for i in range(0, 11)]
+    mpd_w_values = [0.9]
     
     for mpd_w in mpd_w_values:
     
@@ -113,6 +124,17 @@ def main(args):
                 only_encoder = args.only_encoder
             )
 
+        start_epoch = 1
+        if args.resume:
+            checkpoint = torch.load(args.resume, map_location=device)
+            state_dict = checkpoint["model"]
+            if any(key.startswith("module.") for key in state_dict):
+                state_dict = {key[7:] if key.startswith("module.") else key: value for key, value in state_dict.items()}
+            model.load_state_dict(state_dict)
+            optimizer.load_state_dict(checkpoint["optimizer"])
+            start_epoch = int(checkpoint.get("epoch", 0)) + 1
+            print(f"Resuming from {args.resume} at epoch {start_epoch}")
+
         cosineScheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
             optimizer=optimizer, 
             T_max=args.epochs, 
@@ -124,7 +146,7 @@ def main(args):
             warmUpScheduler = GradualWarmupScheduler(
             optimizer=optimizer, 
             multiplier=2.5,
-            warm_epoch=args.epochs // 10, 
+            warm_epoch=max(1, args.epochs // 10), 
             after_scheduler=cosineScheduler
             )
         elif args.lr_schedule == "piecewise":
@@ -139,7 +161,7 @@ def main(args):
         dataloader, model, trainer, sampler, optimizer = accelerator.prepare(dataloader, model, trainer, sampler, optimizer)
 
 
-        for epoch in range(1, args.epochs + 1):
+        for epoch in range(start_epoch, args.epochs + 1):
 
             model.train()
             progress_bar = tqdm(dataloader, desc=f'Epoch {epoch}')
@@ -160,7 +182,7 @@ def main(args):
 
                 progress_bar.set_postfix({
                     "loss": f"{loss.item(): .4f}",
-                    "lr": optimizer.state_dict()['param_groups'][0]["lr"]
+                    "lr": optimizer.param_groups[0]["lr"]
                 })
                 optimizer.step()
                 optimizer.zero_grad()
@@ -178,22 +200,20 @@ def main(args):
                 # sample random noise
                 #if args.onePic_oneCond:
                 n_samples = args.eval_batch_size
-                valid_ds  =CustomImageDatasetCondition_MPD(data_root="/workspace/chiu.li/split_ISIC", dataset_type="test", transform=transform)
-                dataloader_val = DataLoader(valid_ds, batch_size=args.eval_batch_size, shuffle=True, num_workers=args.num_workers)
-                _ ,x_sample = next(enumerate(dataloader_val))
-                x_i = torch.randn(n_samples, *size).to(device)
-                c2_image = x_sample["input_image"].to(device)
-                x_i = (1-mpd_w) * x_i + mpd_w * c2_image
+                with torch.no_grad():
+                    x_sample = next(iter(dataloader_val))
+                    x_i = torch.randn(n_samples, *size, device=device)
+                    c2_image = x_sample["input_image"].to(device, non_blocking=True)
+                    x_i = (1-mpd_w) * x_i + mpd_w * c2_image
 
-                x0 = sampler(x_i, steps=args.steps)
-                x0 = x0 * 0.5 + 0.5
+                    x0 = sampler(x_i, steps=args.steps)
+                    x0 = x0 * 0.5 + 0.5
 
                 # save image
                 x_sample_x_image = x_sample["groundtruth_image"]
                 x_sample_x_image = x_sample_x_image * 0.5 + 0.5
-                c2_image = c2_image.cpu().detach() * 0.5 + 0.5
-                c2_image = c2_image.to(device)
-                x_sample_x_image = x_sample_x_image.to(device)
+                c2_image = c2_image.detach() * 0.5 + 0.5
+                x_sample_x_image = x_sample_x_image.to(device, non_blocking=True)
                 output = torch.cat( (x_sample_x_image , c2_image , x0 ), axis=-2)
 
 #                 os.makedirs(os.path.join('result', args.exp, f"w_{w:.1f}", args.dir), exist_ok=True)
@@ -231,7 +251,7 @@ def main(args):
 
 if __name__ == '__main__':
     os.environ["CUDA_VISIBLE_DEVICES"]='0'
-    os.system("rm -rf /root/notebooks/nfs/work/daniel_chou/CDDIM/data/phison/.ipynb_checkpoints")
+    # os.system("rm -rf /root/notebooks/nfs/work/daniel_chou/CDDIM/data/phison/.ipynb_checkpoints")
     parser = argparse.ArgumentParser()
     #nfs/work/daniel_chou/CDDIM/data/phison
     # General Hyperparameters 
@@ -250,6 +270,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=16, help='batch size')
     parser.add_argument('--epochs', type=int, default=100, help='total training epochs')
     parser.add_argument('--eval_interval', type=int, default=100, help='Frequency of evaluation')
+    parser.add_argument('--resume', type=str, default=None, help='path to checkpoint for resuming training')
     parser.add_argument('--only_table', action='store_true', help="only use embedding table for class embedding")
     parser.add_argument('--fix_emb', action='store_true', help='Freeze embedding table wieght to create fixed label embedding')
     parser.add_argument('--lr_schedule', type=str, default="cosine", choices=["cosine", "piecewise", "linear", "polynomial"])

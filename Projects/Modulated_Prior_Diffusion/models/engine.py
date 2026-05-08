@@ -609,18 +609,20 @@ class DDIMSamplerImage(nn.Module):
         alpha_t = extract(self.alpha_t_bar, t, x_t.shape)
         alpha_t_prev = extract(self.alpha_t_bar, prev_t, x_t.shape)
 
-        # predict conditional noise and unconditional noise using model
-        #epsilon_theta_t = self.model(x_t, t, atr, obj)
+        # The image-only MPD model has no dropped labels, so the conditional and
+        # unconditional calls are identical. Avoid doing the same UNet pass twice.
         epsilon_theta_t = self.model(x_t, t)
-        #unc_epsilon_theta_t = self.model(x_t, t, atr, obj, force_drop_ids=True)
-        unc_epsilon_theta_t = self.model(x_t, t, force_drop_ids=True)
-    
-        # classifier-free guidance
-        epsilon_theta_t = (1 + self.w) * epsilon_theta_t - self.w * unc_epsilon_theta_t
+        uses_label_condition = (
+            getattr(self.model, "num_atr", None) is not None or
+            getattr(self.model, "num_obj", None) is not None
+        )
+        if uses_label_condition:
+            unc_epsilon_theta_t = self.model(x_t, t, force_drop_ids=True)
+            epsilon_theta_t = (1 + self.w) * epsilon_theta_t - self.w * unc_epsilon_theta_t
         
         # calculate x_{t-1}
         sigma_t = eta * torch.sqrt((1 - alpha_t_prev) / (1 - alpha_t) * (1 - alpha_t / alpha_t_prev))
-        epsilon_t = torch.randn_like(x_t)
+        epsilon_t = torch.randn_like(x_t) if eta != 0.0 else 0
         x_t_minus_one = (
                 torch.sqrt(alpha_t_prev / alpha_t) * x_t +
                 (torch.sqrt(1 - alpha_t_prev - sigma_t ** 2) - torch.sqrt(
