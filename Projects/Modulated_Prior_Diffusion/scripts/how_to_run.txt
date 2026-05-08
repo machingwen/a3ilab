@@ -1,0 +1,14 @@
+# Run both
+bash scripts/run_isic_learning_curves.sh
+
+# Run only MPD
+RUN_WHICH=mpd bash scripts/run_isic_learning_curves.sh
+
+# Run only GPCD
+RUN_WHICH=gpcd bash scripts/run_isic_learning_curves.sh
+
+# Change validation step count
+VAL_STEPS=3 RUN_WHICH=mpd bash scripts/run_isic_learning_curves.sh
+
+# Eval
+MAX_EVAL_SAMPLES=100 STEP_VALUES="1 3 5 10 20 50" bash scripts/eval_isic_learning_curve_steps.sh

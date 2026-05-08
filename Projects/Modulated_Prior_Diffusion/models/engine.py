@@ -643,14 +643,8 @@ class DDIMSamplerImage(nn.Module):
         alpha_t = extract(self.alpha_t_bar, t, x_t.shape)
         alpha_t_prev = extract(self.alpha_t_bar, prev_t, x_t.shape)
 
-        # predict conditional noise and unconditional noise using model
-        #epsilon_theta_t = self.model(x_t, t, atr, obj)
+        # Image-only MPD has no dropped condition; a second force_drop_ids pass is identical.
         epsilon_theta_t = self.model(x_t, t)
-        #unc_epsilon_theta_t = self.model(x_t, t, atr, obj, force_drop_ids=True)
-        unc_epsilon_theta_t = self.model(x_t, t, force_drop_ids=True)
-    
-        # classifier-free guidance
-        epsilon_theta_t = (1 + self.w) * epsilon_theta_t - self.w * unc_epsilon_theta_t
         
         # calculate x_{t-1}
         sigma_t = eta * torch.sqrt((1 - alpha_t_prev) / (1 - alpha_t) * (1 - alpha_t / alpha_t_prev))

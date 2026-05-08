@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+
+checkpoint/
+result/
+generate_result/
+logs/
+wandb/
+vendor_python/
+
+.ipynb_checkpoints/
+
+*.bak_*
