@@ -1,236 +1,127 @@
-# Modulated Prior Diffusion (MPD)
+# Modulated Prior Diffusion (MPD) Reproduction Review
 
-MPD is a diffusion model that injects condition information by modulating the prior distribution, rather than using conditioning modules inside the network.  It learns to generate segmentation results by initializing the reverse process from noise that contains information from the reference image, instead of starting from pure Gaussian noise.  The neural network architecture is based on U-Net, while the conditioning mechanism is simplified by removing additional encoders or feature fusion modules.  The diffusion process follows the standard [Denoising Diffusion Probabilistic Model (DDPM)](https://arxiv.org/abs/2006.11239).  This implementation is modified from an existing [conditional diffusion repository](https://github.com/machingwen/a3ilab/tree/main/Projects/Compositional%20Conditional%20Diffusion%20Model), and extended to support the Modulated Prior Diffusion (MPD) framework.
+This branch is prepared for review by the original MPD author.  Its purpose is to make the current MPD reproduction workflow explicit and easy to check before any public release or downstream method comparison.
 
-## Key Idea
+New method work is intentionally out of scope for this branch.  The README and scripts here should describe only the original MPD reproduction path.
 
-- The reverse process is initialized from a modulated prior whose mean is shifted toward the reference image:
+## Scope
 
-$$
-x_T \sim \mathcal{N}(x_r, I)
-$$
+- MPD training on a preprocessed ISIC split.
+- MPD generation from a trained checkpoint.
+- Optional DenseCRF post-processing and metric evaluation.
+- Reproduction scripts under `scripts/` for the exact local workflow.
 
-- The reverse denoising process starts from a noisy sample that already contains conditioning information.
+## Method Summary
 
-<p align="center">
-<img src="MPD_process.png" width="700">
-</p>
+MPD injects condition information by modulating the prior distribution instead of adding a separate conditioning module inside the denoising network.  The reverse process is initialized from noise mixed with the reference image:
 
-## Model Architecture
-<p align="center">
-<img src="Model_architecture.png" width="700">
-</p>
+```text
+x_T = (1 - mpd_w) * noise + mpd_w * reference_image
+```
 
-The initial noise is combined with the reference image to form a modulated prior, which serves as the starting point of the reverse denoising process.
-
-## Condition Strength Parameter
-
-MPD introduces a condition strength parameter \( w \), which controls how much the reference image influences the prior distribution.
-
-The sampling of the initial noise is modified as:
-
-$$
-x_T \sim \mathcal{N}(w x_r, (1 - w) I)
-$$
-
-- Larger \( w \): stronger influence from the reference image  
-- Smaller \( w \): stronger influence from noise
-
-## Training & Inference
-
-The training and inference procedures follow the standard diffusion framework.
-
-The key difference lies in the initial distribution. Instead of using a standard Gaussian distribution, MPD uses a modulated distribution that incorporates information from the reference image.
-
-<p align="center">
-  <b>Training</b><br>
-  <img src="training_procedure.png" width="600">
-</p>
-
-<p align="center">
-  <b>Inference</b><br>
-  <img src="Inference_procedure.png" width="600">
-</p>
+In this reproduction workflow, `mpd_w` controls the MPD prior mixing strength.  `sampler_w` is kept separate and controls DDIM sampler guidance where supported.
 
 ## Dataset
 
-We evaluate our method on medical image segmentation datasets.
+The scripts expect an ISIC split with this directory layout:
 
-- **ISIC dataset**: a public dataset for skin lesion segmentation  
-- **KMU dataset**: clinical facial image dataset  
-
-All images are resized to a fixed resolution (e.g., 128 × 128) for training and evaluation.
-Below are example images and their corresponding segmentation masks from the datasets.
-
-<div align="center">
-  <table>
-    <tr>
-      <td align="center" valign="middle">
-        <b>ISIC</b><br><br>
-        <img src="ISIC_example.png" height="350">
-      </td>
-      <td align="center" valign="middle">
-        <b>KMU</b><br><br>
-        <img src="KMU_example.png" height="350">
-      </td>
-    </tr>
-  </table>
-</div>
-
-
-## Usage
-
-### Training
-
-Quick server smoke test without a dataset or checkpoint:
-
-```bash
-python train_main.py \
-  --smoke_test \
-  --method mpd \
-  --no_wandb \
-  --epochs 1 \
-  --batch_size 1 \
-  --num_workers 0 \
-  --img_size 16 \
-  --eval_interval 999999 \
-  --num_timestep 10 \
-  --steps 2 \
-  --emb_size 32 \
-  --channel_mult 1 \
-  --num_res_blocks 1 \
-  --num_heads 4 \
-  --projection_dim 64 \
-  --num_condition 1 1
+```text
+<data_root>/
+  train_original_80/
+  train_crop_80/
+  test_original_20/
+  test_crop_20/
 ```
 
+The current reproduction uses images resized to `128 x 128` before training.
+
+Preprocess the ISIC split:
+
 ```bash
-python train_main.py \
-  --smoke_test \
-  --method gpcd_concat \
-  --no_wandb \
-  --epochs 1 \
-  --batch_size 1 \
-  --num_workers 0 \
-  --img_size 16 \
-  --eval_interval 999999 \
-  --num_timestep 10 \
-  --steps 2 \
-  --emb_size 32 \
-  --channel_mult 1 \
-  --num_res_blocks 1 \
-  --num_heads 4 \
-  --projection_dim 64 \
-  --num_condition 1 1
+bash scripts/run_preprocess_isic_128.sh
 ```
 
-Run the following command to start MPD training:
+Or run the preprocessing script directly:
 
 ```bash
-python train_main.py \
-  --method mpd \
-  --train_data_root /path/to/split_ISIC \
-  --eval_data_root /path/to/split_ISIC \
-  --no_wandb
+python scripts/preprocess_isic_128.py \
+  --src-root /path/to/isic_mpd_png \
+  --dst-root /path/to/isic_mpd_png_128 \
+  --size 128 \
+  --overwrite
 ```
 
-You can modify the training settings by adjusting the arguments in the script, such as `--epochs`, `--img_size`, `--batch_size`, and `--lr`.
+## Training
 
-Example:
+Run the local reproduction training script:
+
+```bash
+bash scripts/run_original_mpd_repro_isic_128_e500.sh
+```
+
+Equivalent direct command:
 
 ```bash
 python train_main.py \
-  --method mpd \
-  --train_data_root /path/to/split_ISIC \
-  --eval_data_root /path/to/split_ISIC \
-  --no_wandb \
-  --epochs 500 \
+  --exp isic_original_mpd_repro_128_e500 \
+  --train_data_root /path/to/isic_mpd_png_128 \
+  --eval_data_root /path/to/isic_mpd_png_128 \
   --img_size 128 \
-  --batch_size 4 \
-  --lr 5e-6
-```
-
-To train the GPCD concat-downsizer baseline:
-
-```bash
-python train_main.py \
-  --method gpcd_concat \
-  --train_data_root /path/to/split_ISIC \
-  --eval_data_root /path/to/split_ISIC \
-  --no_wandb \
+  --mpd_w 0.9 \
   --epochs 500 \
+  --eval_interval 50 \
+  --lr 5e-6 \
+  --num_workers 4 \
+  --batch_size 32 \
+  --eval_batch_size 32 \
+  --steps 100
+```
+
+Checkpoints are written under:
+
+```text
+checkpoint/isic_original_mpd_repro_128_e500/mpd_w_0.9_lr5.0e-06/
+```
+
+## Generation And Evaluation
+
+Run generation and generated-mask evaluation:
+
+```bash
+bash scripts/run_original_mpd_repro_generate_eval.sh
+```
+
+Equivalent generation command:
+
+```bash
+python generate_main.py \
+  --method mpd \
+  --data_root /path/to/isic_mpd_png_128 \
+  --checkpoint_root checkpoint/isic_original_mpd_repro_128_e500 \
+  --output_dir generate_result/repro_mpd_postprocess_densecrf \
+  --epoch 500 \
+  --ckpt_lr 5.0e-06 \
   --img_size 128 \
-  --batch_size 4 \
-  --lr 5e-6
+  --steps 100 \
+  --eval_batch_size 8 \
+  --num_workers 0 \
+  --sampler_w 3.0 \
+  --mpd_w_values 0.9
 ```
 
-The `gpcd_concat` baseline keeps the U-Net denoiser backbone size unchanged. It samples Gaussian training noise, initializes inference from Gaussian noise, concatenates `x_t` with the reference image, and maps the concatenated tensor back to the denoiser input channels with `Conv3x3 + SiLU + Conv1x1`.
-
----
-
-### Inference
-
-Quick server smoke test without a dataset or checkpoint:
+Evaluate generated masks with DenseCRF:
 
 ```bash
-python generate_main.py \
-  --smoke_test \
-  --method mpd \
-  --steps 2 \
-  --smoke_samples 1 \
-  --img_size 16 \
-  --num_timestep 10 \
-  --emb_size 32 \
-  --channel_mult 1 \
-  --num_res_blocks 1 \
-  --num_heads 4 \
-  --projection_dim 64
+python scripts/eval_original_mpd_repro_densecrf_isic.py \
+  --data_root /path/to/isic_mpd_png_128 \
+  --output_dir result/isic_original_mpd_repro_128_e500/eval_generated_masks_densecrf \
+  --pred_mask_dir generate_result/repro_mpd_postprocess_densecrf/mpd_w_0.9/masks_mpd_w_0.9 \
+  --mpd_w 0.9
 ```
 
-```bash
-python generate_main.py \
-  --smoke_test \
-  --method gpcd_concat \
-  --steps 2 \
-  --smoke_samples 1 \
-  --img_size 16 \
-  --num_timestep 10 \
-  --emb_size 32 \
-  --channel_mult 1 \
-  --num_res_blocks 1 \
-  --num_heads 4 \
-  --projection_dim 64
-```
+## Review Notes
 
-Run the following command to perform MPD inference:
-
-```bash
-python generate_main.py \
-  --method mpd \
-  --data_root /path/to/split_ISIC \
-  --checkpoint_root /path/to/checkpoint/MED_pth_w_ISIC \
-  --output_dir /path/to/generate_result \
-  --epoch 500 \
-  --ckpt_lr 5.0e-06
-```
-
-To run inference with the GPCD concat-downsizer baseline:
-
-```bash
-python generate_main.py \
-  --method gpcd_concat \
-  --data_root /path/to/split_ISIC \
-  --checkpoint_root /path/to/checkpoint/MED_pth_w_ISIC \
-  --output_dir /path/to/generate_result \
-  --epoch 500 \
-  --ckpt_lr 5.0e-06
-```
-
-After inference, it is recommended to apply post-processing to the generated segmentation results depending on the dataset.
-
-For example, techniques such as smoothing or CRF can be used to refine the segmentation masks.
-
----
-### Notes
-
-Ensure the dataset path is correctly configured before running the code.
+- `train_main.py` is the MPD reproduction entry point for this branch.
+- `generate_main.py` is the MPD generation entry point.
+- The reproduction scripts use local default paths from the current environment; reviewers should replace them with their dataset/checkpoint paths when needed.
+- Generated outputs, checkpoints, datasets, virtual environments, and notebook checkpoint folders should not be committed.

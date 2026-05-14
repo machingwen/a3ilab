@@ -12,3 +12,4 @@ vendor_python/
 .ipynb_checkpoints/
 
 *.bak_*
+.venv/

@@ -33,6 +33,8 @@ from dataset_test import CustomImageDatasetCondition_MPD, CustomSampler
 from utils import GradualWarmupScheduler, get_model, get_optimizer, get_piecewise_constant_schedule, get_linear_schedule_with_warmup, get_polynomial_decay_schedule_with_warmup, LoadEncoder
 from scipy.ndimage import binary_fill_holes
 
+REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 try:
     import pydensecrf.densecrf as dcrf
     from pydensecrf.utils import unary_from_softmax
@@ -60,7 +62,9 @@ def apply_crf(img, prob_map):
     
     # === 增強 soft mask 對比度，避免邊界被吃掉 ===
     prob_map = np.clip(prob_map, 0.001, 0.999)
-    prob_map = (prob_map - prob_map.min()) / (prob_map.max() - prob_map.min())
+    # Guard constant masks so CRF normalization does not produce NaNs.
+    denom = prob_map.max() - prob_map.min()
+    prob_map = (prob_map - prob_map.min()) / (denom if denom > 0 else 1.0)
 
     # 準備 softmax probability
     probs = np.zeros((2, H, W), dtype=np.float32)
@@ -89,6 +93,10 @@ def apply_crf(img, prob_map):
     return refined
 
 
+def weight_label(value):
+    return f"{float(value):g}"
+
+
 
 class Args(argparse.Namespace):
     arch = "unetattention_image"
@@ -103,8 +111,9 @@ class Args(argparse.Namespace):
     use_spatial_transformer = False
     num_heads = 4
     num_sample = 4  # 一次生成數量
-    w = 3
-    #w = 1.0
+    sampler_w = 3.0
+    w = sampler_w
+    mpd_w_values = [0.9]
     projection_dim = 512
     only_table = False
     concat = False
@@ -115,9 +124,9 @@ class Args(argparse.Namespace):
     eval_batch_size = 8
     num_workers = 4
     ignored = None
-    data_root = "/workspace/Modulated_Prior_Diffusion/split_ISIC/"
-    checkpoint_root = "/workspace/Modulated_Prior_Diffusion/checkpoint/MED_pth_w_ISIC"
-    output_dir = "/workspace/Modulated_Prior_Diffusion/generate_result"
+    data_root = "/work-pvc/macw1030/isic_mpd_png_128"
+    checkpoint_root = os.path.join(REPO_ROOT, "checkpoint", "isic_original_mpd_repro_128_e500")
+    output_dir = os.path.join(REPO_ROOT, "generate_result", "repro_mpd_postprocess_densecrf")
     checkpoint_path = None
     epoch = 500
     ckpt_lr = "5.0e-06"
@@ -141,6 +150,8 @@ parser.add_argument("--num_timestep", type=int, default=args.num_timestep, help=
 parser.add_argument("--steps", type=int, default=args.steps, help="DDIM sampling steps")
 parser.add_argument("--eval_batch_size", type=int, default=args.eval_batch_size, help="evaluation batch size")
 parser.add_argument("--num_workers", type=int, default=args.num_workers, help="number of dataloader workers")
+parser.add_argument("--sampler_w", type=float, default=args.sampler_w, help="DDIM sampler guidance weight; distinct from MPD conditioning weight")
+parser.add_argument("--mpd_w_values", type=float, nargs="+", default=args.mpd_w_values, help="MPD conditioning mix weights")
 parser.add_argument("--emb_size", type=int, default=args.emb_size, help="embedding output dimension")
 parser.add_argument("--channel_mult", type=int, nargs="+", default=args.channel_mult, help="width of unet model")
 parser.add_argument("--num_res_blocks", type=int, default=args.num_res_blocks, help="number of residual blocks")
@@ -163,6 +174,9 @@ args.num_timestep = cli_args.num_timestep
 args.steps = cli_args.steps
 args.eval_batch_size = cli_args.eval_batch_size
 args.num_workers = cli_args.num_workers
+args.sampler_w = cli_args.sampler_w
+args.w = cli_args.sampler_w
+args.mpd_w_values = cli_args.mpd_w_values
 args.emb_size = cli_args.emb_size
 args.channel_mult = cli_args.channel_mult
 args.num_res_blocks = cli_args.num_res_blocks
@@ -172,19 +186,30 @@ args.num_head_channels = cli_args.num_head_channels
 args.smoke_test = cli_args.smoke_test
 args.smoke_samples = cli_args.smoke_samples
 args.no_wandb = cli_args.no_wandb
-#mpd_w_values = [round(0.1 * i, 1) for i in range(0, 11)]
-mpd_w_values = [0.9] if args.method == "mpd" else [None]
+mpd_w_values = args.mpd_w_values if args.method == "mpd" else [None]
 
 for mpd_w in mpd_w_values:
 # 加載模型
     if args.method == "mpd":
         mpd_w = round(mpd_w, 1)
+        mpd_w_str = weight_label(mpd_w)
     model = get_model(args)
     epoch = args.epoch
     if args.checkpoint_path is not None:
         ckpt_path = args.checkpoint_path
     elif args.method == "mpd":
-        ckpt_path = os.path.join(args.checkpoint_root, f"w_{mpd_w}_lr{args.ckpt_lr}", f"model_epoch{epoch}_lr{args.ckpt_lr}_w{mpd_w}.pth")
+        ckpt_path = os.path.join(
+            args.checkpoint_root,
+            f"mpd_w_{mpd_w_str}_lr{args.ckpt_lr}",
+            f"model_epoch{epoch}_lr{args.ckpt_lr}_mpd_w{mpd_w_str}.pth",
+        )
+        legacy_ckpt_path = os.path.join(
+            args.checkpoint_root,
+            f"w_{mpd_w_str}_lr{args.ckpt_lr}",
+            f"model_epoch{epoch}_lr{args.ckpt_lr}_w{mpd_w_str}.pth",
+        )
+        if not os.path.exists(ckpt_path) and os.path.exists(legacy_ckpt_path):
+            ckpt_path = legacy_ckpt_path
     else:
         ckpt_path = os.path.join(args.checkpoint_root, f"{args.method}_lr{args.ckpt_lr}", f"model_epoch{epoch}_lr{args.ckpt_lr}_{args.method}.pth")
     if args.smoke_test:
@@ -278,16 +303,15 @@ for mpd_w in mpd_w_values:
     dataloader_val = DataLoader(valid_ds, batch_size=args.eval_batch_size, shuffle=False, num_workers=args.num_workers)
 
     # 從數據加載器中獲取一個批次的數據
-    _, x_sample = next(enumerate(dataloader_val))
-
-
+    # Disabled: the generation loop below initializes the DataLoader itself.
+    # Fetching a throwaway batch here starts extra workers and can add shared-memory pressure.
+    # _, x_sample = next(enumerate(dataloader_val))
 
     # 創建圖片儲存目錄
-    save_dir = os.path.join(args.output_dir, f"w_{mpd_w}" if args.method == "mpd" else args.method)
+    save_dir = os.path.join(args.output_dir, f"mpd_w_{mpd_w_str}" if args.method == "mpd" else args.method)
     os.makedirs(save_dir, exist_ok=True)
 
-    # 刪除 .ipynb_checkpoints 目錄
-    os.system(f"rm -rf {save_dir}/.ipynb_checkpoints")
+    shutil.rmtree(os.path.join(save_dir, ".ipynb_checkpoints"), ignore_errors=True)
 
     results = []
     num_generations = 3  # 可改為 5
@@ -369,7 +393,8 @@ for mpd_w in mpd_w_values:
 
         for idx in range(x0_union.size(0)):
             filename = x_sample["filename"][idx]
-            original_image_path = valid_ds.img_path_files[batch_idx * args.eval_batch_size + idx]
+            dataset_idx = batch_idx * args.eval_batch_size + idx
+            original_image_path = valid_ds.img_path_files[dataset_idx]
             original_image = Image.open(original_image_path).convert("RGB")
             original_size = original_image.size
             original_size_hw = (original_size[1], original_size[0])
@@ -385,7 +410,7 @@ for mpd_w in mpd_w_values:
             print(f"Original size: {original_size_hw}, Resized mask size: {x0_union_resized_np.shape}")
 
             
-            gt_mask_path = os.path.join(valid_ds.gt_path, filename + ".PNG")
+            gt_mask_path = valid_ds.gt_path_files[dataset_idx]
             gt_image = Image.open(gt_mask_path).convert("L")
             gt_image = np.array(gt_image)
 
@@ -427,9 +452,9 @@ for mpd_w in mpd_w_values:
                 })
 
             # 儲存 Mask 圖與可視化圖
-            masks_dir = os.path.join(save_dir, f"masks_{mpd_w}" if args.method == "mpd" else f"masks_{args.method}")
+            masks_dir = os.path.join(save_dir, f"masks_mpd_w_{mpd_w_str}" if args.method == "mpd" else f"masks_{args.method}")
             os.makedirs(masks_dir, exist_ok=True)
-            mask_suffix = str(mpd_w) if args.method == "mpd" else args.method
+            mask_suffix = f"mpd_w{mpd_w_str}" if args.method == "mpd" else args.method
             mask_save_path = os.path.join(masks_dir, f"{filename}_mask_{mask_suffix}.PNG")
             Image.fromarray(x0_union_resized_np).save(mask_save_path)
             print(f"Saved mask to: {mask_save_path}")
@@ -447,13 +472,13 @@ for mpd_w in mpd_w_values:
             axes[3].imshow(skin_applied_result)
             axes[3].set_title("Output")
             axes[3].axis("off")
-            generated_suffix = f"w{mpd_w}" if args.method == "mpd" else args.method
+            generated_suffix = f"mpd_w{mpd_w_str}" if args.method == "mpd" else args.method
             plt.savefig(f"{save_dir}/{filename}_generated_{generated_suffix}.PNG")
             plt.close(fig)
 
 # 儲存 CSV
 results_df = pd.DataFrame(results)
-csv_suffix = f"w{mpd_w}" if args.method == "mpd" else args.method
+csv_suffix = f"mpd_w{mpd_w_str}" if args.method == "mpd" else args.method
 csv_output_path = os.path.join(save_dir, f"pigmentation_scores_{csv_suffix}.csv")
 results_df.to_csv(csv_output_path, index=False)
 print(f"Saved scores to CSV at {csv_output_path}")
