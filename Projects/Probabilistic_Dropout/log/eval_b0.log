@@ -1,0 +1,44 @@
+ex0_b0.sh: line 5: python: command not found
+Traceback (most recent call last):
+  File "/home/user/.local/bin/lm_eval", line 8, in <module>
+    sys.exit(cli_evaluate())
+  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/__main__.py", line 308, in cli_evaluate
+    from lm_eval import evaluator, utils
+  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/evaluator.py", line 11, in <module>
+    import torch
+  File "/home/user/.local/lib/python3.10/site-packages/torch/__init__.py", line 405, in <module>
+    from torch._C import *  # noqa: F403
+ImportError: /home/user/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so: undefined symbol: ncclCommRegister
+ex0_b0.sh: line 13: python: command not found
+Traceback (most recent call last):
+  File "/home/user/.local/bin/lm_eval", line 8, in <module>
+    sys.exit(cli_evaluate())
+  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/__main__.py", line 308, in cli_evaluate
+    from lm_eval import evaluator, utils
+  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/evaluator.py", line 11, in <module>
+    import torch
+  File "/home/user/.local/lib/python3.10/site-packages/torch/__init__.py", line 405, in <module>
+    from torch._C import *  # noqa: F403
+ImportError: /home/user/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so: undefined symbol: ncclCommRegister
+ex0_b0.sh: line 21: python: command not found
+Traceback (most recent call last):
+  File "/home/user/.local/bin/lm_eval", line 8, in <module>
+    sys.exit(cli_evaluate())
+  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/__main__.py", line 308, in cli_evaluate
+    from lm_eval import evaluator, utils
+  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/evaluator.py", line 11, in <module>
+    import torch
+  File "/home/user/.local/lib/python3.10/site-packages/torch/__init__.py", line 405, in <module>
+    from torch._C import *  # noqa: F403
+ImportError: /home/user/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so: undefined symbol: ncclCommRegister
+ex0_b0.sh: line 28: python: command not found
+Traceback (most recent call last):
+  File "/home/user/.local/bin/lm_eval", line 8, in <module>
+    sys.exit(cli_evaluate())
+  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/__main__.py", line 308, in cli_evaluate
+    from lm_eval import evaluator, utils
+  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/evaluator.py", line 11, in <module>
+    import torch
+  File "/home/user/.local/lib/python3.10/site-packages/torch/__init__.py", line 405, in <module>
+    from torch._C import *  # noqa: F403
+ImportError: /home/user/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so: undefined symbol: ncclCommRegister

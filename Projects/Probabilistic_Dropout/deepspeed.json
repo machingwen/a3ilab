@@ -1,0 +1,80 @@
+{
+    "train_batch_size": "auto",
+    "train_micro_batch_size_per_gpu": "auto",
+    "gradient_accumulation_steps": "auto",
+    "gradient_clipping": 1.0,
+    "steps_per_print": 10,
+    "wall_clock_breakdown": true, 
+    
+   "optimizer": {
+    "type": "AdamW",
+    "params": {
+             "lr": "auto",
+             "eps": 1e-8,
+             "weight_decay": "auto"
+        }
+    },     
+    "scheduler": {
+    "type": "WarmupLR",
+    "params": {
+      "warmup_min_lr": 0,
+      "warmup_max_lr": "auto",
+      "warmup_num_steps": "auto"
+    }
+  },
+    "fp16": {
+        "enabled": "auto",
+        "loss_scale": 0,
+        "loss_scale_window": 1000,
+        "initial_scale_power": 16,
+        "hysteresis": 2,
+        "min_loss_scale": 1
+    },
+  
+    "bf16": {
+    "enabled":"auto"
+  },
+   "zero_optimization": {
+        "stage": 3,
+        "offload_optimizer": {
+            "device": "nvme",
+            "nvme_path": "/media/user/2T",
+            "pin_memory": true,
+            "buffer_count": 6,
+            "fast_init": false
+        },
+        "offload_param": {
+            "device": "cpu",
+            "pin_memory": true
+        },
+        "overlap_comm": true,
+        "contiguous_gradients": true,
+        "sub_group_size": 1e9,
+        "reduce_bucket_size": "auto",
+        "stage3_prefetch_bucket_size":  5e8,
+        "stage3_param_persistence_threshold": 1e6,
+        "stage3_max_live_parameters": 1e9,
+        "stage3_max_reuse_distance": 0,
+        "stage3_gather_16bit_weights_on_model_save": true
+       
+
+    },
+    "aio": {
+            "block_size": 262144,
+            "queue_depth": 4,
+            "thread_count": 1,
+            "single_submit": true,
+            "overlap_events": true
+     },
+    "comms_logger": {
+	  "enabled": true,
+	  "verbose": true,
+	  "prof_all": true,
+	  "debug": true
+     },
+     "activation_checkpointing": {
+    "partition_activations": true,
+    "contiguous_checkpointing": true
+     }
+   
+  }
