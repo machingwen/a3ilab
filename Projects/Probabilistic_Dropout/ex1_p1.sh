@@ -1,7 +1,7 @@
 
 
 
-python main_gemma.py -load yes -train yes -recount no -check yes -relu yes -data siqa_short -dropout_method linear -input input_model -output my_new_model  -lr 1e-5 
+python main_gemma.py -load yes -train yes -recount yes -check yes -relu yes -data siqa_short -dropout_method linear -input input_model -output my_new_model  -lr 1e-5 
 
 
 python eval_gemma.py --dropout yes --threshold 0.005  --sd 0 --original no --recount yes --model my_new_model --recount_data data_siqa
