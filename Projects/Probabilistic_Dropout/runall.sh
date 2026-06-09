@@ -1,6 +1,6 @@
 
 
-
+bash ex0.sh
 bash ex0_b0.sh 2>&1 | tee log/eval_b0.log
 bash ex1_b1.sh 2>&1 | tee log/eval_b1.log
 bash ex1_p1.sh 2>&1 | tee log/eval_p1.log

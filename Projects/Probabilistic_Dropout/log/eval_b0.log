@@ -1,44 +1,291 @@
-ex0_b0.sh: line 5: python: command not found
-Traceback (most recent call last):
-  File "/home/user/.local/bin/lm_eval", line 8, in <module>
-    sys.exit(cli_evaluate())
-  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/__main__.py", line 308, in cli_evaluate
-    from lm_eval import evaluator, utils
-  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/evaluator.py", line 11, in <module>
-    import torch
-  File "/home/user/.local/lib/python3.10/site-packages/torch/__init__.py", line 405, in <module>
-    from torch._C import *  # noqa: F403
-ImportError: /home/user/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so: undefined symbol: ncclCommRegister
-ex0_b0.sh: line 13: python: command not found
-Traceback (most recent call last):
-  File "/home/user/.local/bin/lm_eval", line 8, in <module>
-    sys.exit(cli_evaluate())
-  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/__main__.py", line 308, in cli_evaluate
-    from lm_eval import evaluator, utils
-  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/evaluator.py", line 11, in <module>
-    import torch
-  File "/home/user/.local/lib/python3.10/site-packages/torch/__init__.py", line 405, in <module>
-    from torch._C import *  # noqa: F403
-ImportError: /home/user/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so: undefined symbol: ncclCommRegister
-ex0_b0.sh: line 21: python: command not found
-Traceback (most recent call last):
-  File "/home/user/.local/bin/lm_eval", line 8, in <module>
-    sys.exit(cli_evaluate())
-  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/__main__.py", line 308, in cli_evaluate
-    from lm_eval import evaluator, utils
-  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/evaluator.py", line 11, in <module>
-    import torch
-  File "/home/user/.local/lib/python3.10/site-packages/torch/__init__.py", line 405, in <module>
-    from torch._C import *  # noqa: F403
-ImportError: /home/user/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so: undefined symbol: ncclCommRegister
-ex0_b0.sh: line 28: python: command not found
-Traceback (most recent call last):
-  File "/home/user/.local/bin/lm_eval", line 8, in <module>
-    sys.exit(cli_evaluate())
-  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/__main__.py", line 308, in cli_evaluate
-    from lm_eval import evaluator, utils
-  File "/home/user/.local/lib/python3.10/site-packages/lm_eval/evaluator.py", line 11, in <module>
-    import torch
-  File "/home/user/.local/lib/python3.10/site-packages/torch/__init__.py", line 405, in <module>
-    from torch._C import *  # noqa: F403
-ImportError: /home/user/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so: undefined symbol: ncclCommRegister
+2026-06-09 08:14:33.080213: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09 08:14:33.107794: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-09 08:14:33.724681: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[2026-06-09 08:14:34,921] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-06-09 08:14:35,516] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+dropout: yes
+dropout threshold: 0.005
+relu standard: 0.0 
+recount: yes 
+load my model  input_model
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.83it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.46it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.05it/s]
+Total params: 2506.172416 M
+Trainable params: 2506.172416 M
+recount with  data_siqa
+t= 0 / 11
+t= 1 / 11
+t= 2 / 11
+t= 3 / 11
+t= 4 / 11
+t= 5 / 11
+t= 6 / 11
+t= 7 / 11
+t= 8 / 11
+t= 9 / 11
+save ac, ac=
+
+level_count:
+level  0   0.0  percent:100.0% (0.0%)   cdf= 100.0 %
+level  10   0.01  percent:49.75% (50.25%)   cdf= 97.99 %
+level  20   0.02  percent:38.39% (61.61%)   cdf= 95.08 %
+level  30   0.03  percent:32.62% (67.38%)   cdf= 92.63 %
+level  40   0.04  percent:27.86% (72.14%)   cdf= 89.84 %
+level  50   0.05  percent:24.38% (75.62%)   cdf= 87.18 %
+level  60   0.06  percent:21.74% (78.26%)   cdf= 84.69 %
+level  70   0.07  percent:19.6% (80.4%)   cdf= 82.28 %
+level  80   0.08  percent:17.84% (82.16%)   cdf= 79.99 %
+level  90   0.09  percent:16.56% (83.44%)   cdf= 78.11 %
+level  100   0.1  percent:15.27% (84.73%)   cdf= 75.99 %
+level  103   0.103  percent:12.32% (87.68%)   cdf= 70.43 %
+level  107   0.107  percent:9.71% (90.29%)   cdf= 63.92 %
+total neuron= 2506096640  inactivate neuron= 721833984  real total neron: 3554672640
+inactivate2 percent= 39.838
+x0= [np.float64(8.42), np.float64(15.27), np.float64(24.38), np.float64(32.62), np.float64(38.39), np.float64(49.75)]
+y0= [np.float64(59.86), np.float64(75.99), np.float64(87.18), np.float64(92.63), np.float64(95.08), np.float64(97.99)]
+Generating train split:   0%|          | 0/73546 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 73546/73546 [00:00<00:00, 1750288.14 examples/s]
+Generating validation split:   0%|          | 0/20006 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 20006/20006 [00:00<00:00, 1818937.96 examples/s]
+Generating test split:   0%|          | 0/20005 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 20005/20005 [00:00<00:00, 1875017.91 examples/s]
+Map:   0%|          | 0/64 [00:00<?, ? examples/s]Map: 100%|██████████| 64/64 [00:00<00:00, 2442.59 examples/s]
+/home/user/Desktop/chihyun/dropout/a3ilab/Projects/Probabilistic_Dropout/eval_gemma.py:493: FutureWarning: `tokenizer` is deprecated and will be removed in version 5.0.0 for `Trainer.__init__`. Use `processing_class` instead.
+  trainer = Trainer(
+model= input_model
+  0%|          | 0/16 [00:00<?, ?it/s] 19%|█▉        | 3/16 [00:00<00:00, 26.41it/s] 38%|███▊      | 6/16 [00:00<00:00, 13.54it/s] 50%|█████     | 8/16 [00:00<00:00, 12.08it/s] 62%|██████▎   | 10/16 [00:00<00:00, 11.33it/s] 75%|███████▌  | 12/16 [00:01<00:00, 10.90it/s] 88%|████████▊ | 14/16 [00:01<00:00, 10.66it/s]100%|██████████| 16/16 [00:01<00:00, 10.51it/s]100%|██████████| 16/16 [00:01<00:00, 10.77it/s]
+{'eval_loss': 41.55522537231445, 'eval_model_preparation_time': 0.0012, 'eval_runtime': 1.5908, 'eval_samples_per_second': 40.233, 'eval_steps_per_second': 10.058} 
+
+
+
+start save at  dropout_model 
+
+
+
+----------------------------------------end ------------------------------
+
+2026-06-09 08:15:56.134599: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09 08:15:56.161376: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-09 08:15:56.875216: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09:08:15:58 INFO     [__main__:446] Selected Tasks: ['social_iqa']
+2026-06-09:08:15:58 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2026-06-09:08:15:58 INFO     [evaluator:240] Initializing hf model, with arguments: {'pretrained': './output/dropout_model/final_model'}
+2026-06-09:08:15:58 INFO     [models.huggingface:147] Using device 'cuda'
+2026-06-09:08:15:59 INFO     [models.huggingface:414] Model parallel was set to False, max memory was not set, and device map was set to {'': 'cuda'}
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.76it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.47it/s]
+2026-06-09:08:16:00 INFO     [models.huggingface:254] Model type is 'gemma', part of the Gemma family--a BOS token will be used as Gemma underperforms without it.
+2026-06-09:08:16:06 INFO     [api.task:434] Building contexts for social_iqa on rank 0...
+  0%|          | 0/1954 [00:00<?, ?it/s] 12%|█▏        | 235/1954 [00:00<00:00, 2340.26it/s] 24%|██▍       | 472/1954 [00:00<00:00, 2354.86it/s] 37%|███▋      | 714/1954 [00:00<00:00, 2384.22it/s] 49%|████▉     | 954/1954 [00:00<00:00, 2387.72it/s] 61%|██████▏   | 1198/1954 [00:00<00:00, 2403.50it/s] 74%|███████▎  | 1441/1954 [00:00<00:00, 2411.00it/s] 86%|████████▌ | 1685/1954 [00:00<00:00, 2418.22it/s] 99%|█████████▊| 1927/1954 [00:00<00:00, 2417.94it/s]100%|██████████| 1954/1954 [00:00<00:00, 2403.50it/s]
+2026-06-09:08:16:07 INFO     [evaluator:574] Running loglikelihood requests
+Running loglikelihood requests:   0%|          | 0/5862 [00:00<?, ?it/s]Running loglikelihood requests:   0%|          | 1/5862 [00:00<21:19,  4.58it/s]Running loglikelihood requests:   1%|          | 41/5862 [00:00<00:37, 154.03it/s]Running loglikelihood requests:   1%|▏         | 82/5862 [00:00<00:24, 239.65it/s]Running loglikelihood requests:   2%|▏         | 134/5862 [00:00<00:17, 322.74it/s]Running loglikelihood requests:   3%|▎         | 182/5862 [00:00<00:15, 365.66it/s]Running loglikelihood requests:   4%|▍         | 234/5862 [00:00<00:13, 407.30it/s]Running loglikelihood requests:   5%|▍         | 285/5862 [00:00<00:12, 431.18it/s]Running loglikelihood requests:   6%|▌         | 336/5862 [00:00<00:12, 447.14it/s]Running loglikelihood requests:   7%|▋         | 388/5862 [00:01<00:11, 460.91it/s]Running loglikelihood requests:   7%|▋         | 438/5862 [00:01<00:11, 465.35it/s]Running loglikelihood requests:   8%|▊         | 489/5862 [00:01<00:11, 476.34it/s]Running loglikelihood requests:   9%|▉         | 546/5862 [00:01<00:10, 484.70it/s]Running loglikelihood requests:  10%|█         | 602/5862 [00:01<00:10, 488.68it/s]Running loglikelihood requests:  11%|█▏        | 665/5862 [00:01<00:10, 510.45it/s]Running loglikelihood requests:  12%|█▏        | 723/5862 [00:01<00:10, 511.84it/s]Running loglikelihood requests:  13%|█▎        | 781/5862 [00:01<00:09, 513.54it/s]Running loglikelihood requests:  14%|█▍        | 841/5862 [00:01<00:09, 520.36it/s]Running loglikelihood requests:  15%|█▌        | 897/5862 [00:02<00:09, 514.20it/s]Running loglikelihood requests:  16%|█▋        | 956/5862 [00:02<00:09, 518.85it/s]Running loglikelihood requests:  17%|█▋        | 1012/5862 [00:02<00:09, 513.79it/s]Running loglikelihood requests:  18%|█▊        | 1071/5862 [00:02<00:09, 518.42it/s]Running loglikelihood requests:  19%|█▉        | 1130/5862 [00:02<00:09, 521.51it/s]Running loglikelihood requests:  20%|██        | 1187/5862 [00:02<00:09, 519.31it/s]Running loglikelihood requests:  21%|██▏       | 1246/5862 [00:02<00:08, 523.04it/s]Running loglikelihood requests:  22%|██▏       | 1303/5862 [00:02<00:08, 519.92it/s]Running loglikelihood requests:  23%|██▎       | 1361/5862 [00:02<00:08, 520.12it/s]Running loglikelihood requests:  24%|██▍       | 1421/5862 [00:03<00:08, 526.67it/s]Running loglikelihood requests:  25%|██▌       | 1485/5862 [00:03<00:08, 541.46it/s]Running loglikelihood requests:  26%|██▋       | 1545/5862 [00:03<00:07, 541.09it/s]Running loglikelihood requests:  27%|██▋       | 1606/5862 [00:03<00:07, 542.68it/s]Running loglikelihood requests:  28%|██▊       | 1667/5862 [00:03<00:07, 545.41it/s]Running loglikelihood requests:  29%|██▉       | 1727/5862 [00:03<00:07, 544.04it/s]Running loglikelihood requests:  31%|███       | 1791/5862 [00:03<00:07, 554.35it/s]Running loglikelihood requests:  32%|███▏      | 1851/5862 [00:03<00:07, 550.52it/s]Running loglikelihood requests:  33%|███▎      | 1915/5862 [00:03<00:07, 558.14it/s]Running loglikelihood requests:  34%|███▎      | 1972/5862 [00:04<00:07, 545.54it/s]Running loglikelihood requests:  35%|███▍      | 2028/5862 [00:04<00:07, 534.01it/s]Running loglikelihood requests:  36%|███▌      | 2090/5862 [00:04<00:06, 542.05it/s]Running loglikelihood requests:  37%|███▋      | 2145/5862 [00:04<00:06, 533.14it/s]Running loglikelihood requests:  38%|███▊      | 2199/5862 [00:04<00:07, 521.13it/s]Running loglikelihood requests:  39%|███▊      | 2262/5862 [00:04<00:06, 536.90it/s]Running loglikelihood requests:  40%|███▉      | 2319/5862 [00:04<00:06, 532.20it/s]Running loglikelihood requests:  41%|████      | 2378/5862 [00:04<00:06, 533.51it/s]Running loglikelihood requests:  42%|████▏     | 2435/5862 [00:04<00:06, 529.69it/s]Running loglikelihood requests:  43%|████▎     | 2512/5862 [00:05<00:05, 587.71it/s]Running loglikelihood requests:  44%|████▍     | 2587/5862 [00:05<00:05, 627.28it/s]Running loglikelihood requests:  45%|████▌     | 2653/5862 [00:05<00:05, 632.26it/s]Running loglikelihood requests:  46%|████▋     | 2724/5862 [00:05<00:04, 650.22it/s]Running loglikelihood requests:  48%|████▊     | 2792/5862 [00:05<00:04, 655.18it/s]Running loglikelihood requests:  49%|████▉     | 2860/5862 [00:05<00:04, 658.14it/s]Running loglikelihood requests:  50%|████▉     | 2926/5862 [00:05<00:04, 654.64it/s]Running loglikelihood requests:  51%|█████     | 2992/5862 [00:05<00:04, 652.97it/s]Running loglikelihood requests:  52%|█████▏    | 3061/5862 [00:05<00:04, 660.23it/s]Running loglikelihood requests:  53%|█████▎    | 3128/5862 [00:05<00:04, 660.15it/s]Running loglikelihood requests:  55%|█████▍    | 3200/5862 [00:06<00:03, 674.54it/s]Running loglikelihood requests:  56%|█████▌    | 3274/5862 [00:06<00:03, 689.87it/s]Running loglikelihood requests:  57%|█████▋    | 3344/5862 [00:06<00:03, 689.11it/s]Running loglikelihood requests:  58%|█████▊    | 3413/5862 [00:06<00:03, 686.05it/s]Running loglikelihood requests:  59%|█████▉    | 3485/5862 [00:06<00:03, 692.99it/s]Running loglikelihood requests:  61%|██████    | 3555/5862 [00:06<00:03, 692.17it/s]Running loglikelihood requests:  62%|██████▏   | 3625/5862 [00:06<00:03, 692.17it/s]Running loglikelihood requests:  63%|██████▎   | 3695/5862 [00:06<00:03, 691.95it/s]Running loglikelihood requests:  64%|██████▍   | 3765/5862 [00:06<00:03, 691.42it/s]Running loglikelihood requests:  65%|██████▌   | 3835/5862 [00:06<00:02, 691.68it/s]Running loglikelihood requests:  67%|██████▋   | 3905/5862 [00:07<00:02, 691.19it/s]Running loglikelihood requests:  68%|██████▊   | 3975/5862 [00:07<00:02, 691.90it/s]Running loglikelihood requests:  69%|██████▉   | 4045/5862 [00:07<00:02, 692.63it/s]Running loglikelihood requests:  70%|███████   | 4121/5862 [00:07<00:02, 710.76it/s]Running loglikelihood requests:  72%|███████▏  | 4193/5862 [00:07<00:02, 711.82it/s]Running loglikelihood requests:  73%|███████▎  | 4265/5862 [00:07<00:02, 711.78it/s]Running loglikelihood requests:  74%|███████▍  | 4337/5862 [00:07<00:02, 711.38it/s]Running loglikelihood requests:  75%|███████▌  | 4409/5862 [00:07<00:02, 710.60it/s]Running loglikelihood requests:  77%|███████▋  | 4485/5862 [00:07<00:01, 724.02it/s]Running loglikelihood requests:  78%|███████▊  | 4558/5862 [00:07<00:01, 723.95it/s]Running loglikelihood requests:  79%|███████▉  | 4632/5862 [00:08<00:01, 726.90it/s]Running loglikelihood requests:  80%|████████  | 4708/5862 [00:08<00:01, 733.87it/s]Running loglikelihood requests:  82%|████████▏ | 4782/5862 [00:08<00:01, 734.71it/s]Running loglikelihood requests:  83%|████████▎ | 4858/5862 [00:08<00:01, 742.25it/s]Running loglikelihood requests:  84%|████████▍ | 4939/5862 [00:08<00:01, 762.46it/s]Running loglikelihood requests:  86%|████████▌ | 5016/5862 [00:08<00:01, 764.08it/s]Running loglikelihood requests:  87%|████████▋ | 5093/5862 [00:08<00:01, 765.63it/s]Running loglikelihood requests:  88%|████████▊ | 5171/5862 [00:08<00:00, 769.31it/s]Running loglikelihood requests:  90%|████████▉ | 5254/5862 [00:08<00:00, 787.35it/s]Running loglikelihood requests:  91%|█████████ | 5334/5862 [00:09<00:00, 764.62it/s]Running loglikelihood requests:  92%|█████████▏| 5417/5862 [00:09<00:00, 758.60it/s]Running loglikelihood requests:  94%|█████████▍| 5507/5862 [00:09<00:00, 773.59it/s]Running loglikelihood requests:  95%|█████████▌| 5598/5862 [00:09<00:00, 787.71it/s]Running loglikelihood requests:  97%|█████████▋| 5694/5862 [00:09<00:00, 824.75it/s]Running loglikelihood requests:  99%|█████████▉| 5796/5862 [00:09<00:00, 869.04it/s]Running loglikelihood requests: 100%|██████████| 5862/5862 [00:09<00:00, 609.50it/s]
+2026-06-09:08:16:20 INFO     [loggers.evaluation_tracker:280] Output path not provided, skipping saving results aggregated
+hf (pretrained=./output/dropout_model/final_model), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: 8
+|  Tasks   |Version|Filter|n-shot|Metric|   |Value |   |Stderr|
+|----------|------:|------|-----:|------|---|-----:|---|-----:|
+|social_iqa|      0|none  |     0|acc   |↑  |0.4417|±  |0.0112|
+
+2026-06-09 08:16:22.800987: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09 08:16:22.837501: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-09 08:16:23.518722: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[2026-06-09 08:16:24,762] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-06-09 08:16:25,379] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+dropout: yes
+dropout threshold: 0.01
+relu standard: 0.0 
+recount: no 
+load my model  input_model
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.74it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.33it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.93it/s]
+/home/user/Desktop/chihyun/dropout/a3ilab/Projects/Probabilistic_Dropout/eval_gemma.py:493: FutureWarning: `tokenizer` is deprecated and will be removed in version 5.0.0 for `Trainer.__init__`. Use `processing_class` instead.
+  trainer = Trainer(
+Total params: 2506.172416 M
+Trainable params: 2506.172416 M
+---load and not  ---
+
+level_count:
+level  0   0.0  percent:100.0% (0.0%)   cdf= 100.0 %
+level  10   0.01  percent:49.75% (50.25%)   cdf= 97.99 %
+level  20   0.02  percent:38.39% (61.61%)   cdf= 95.08 %
+level  30   0.03  percent:32.62% (67.38%)   cdf= 92.63 %
+level  40   0.04  percent:27.86% (72.14%)   cdf= 89.84 %
+level  50   0.05  percent:24.38% (75.62%)   cdf= 87.18 %
+level  60   0.06  percent:21.74% (78.26%)   cdf= 84.69 %
+level  70   0.07  percent:19.6% (80.4%)   cdf= 82.28 %
+level  80   0.08  percent:17.84% (82.16%)   cdf= 79.99 %
+level  90   0.09  percent:16.56% (83.44%)   cdf= 78.11 %
+level  100   0.1  percent:15.27% (84.73%)   cdf= 75.99 %
+level  103   0.103  percent:12.32% (87.68%)   cdf= 70.43 %
+level  107   0.107  percent:9.71% (90.29%)   cdf= 63.92 %
+total neuron= 2506096640  inactivate neuron= 910522368  real total neron: 3554672640
+inactivate2 percent= 50.251
+x0= [np.float64(8.42), np.float64(15.27), np.float64(24.38), np.float64(32.62), np.float64(38.39), np.float64(49.75)]
+y0= [np.float64(59.86), np.float64(75.99), np.float64(87.18), np.float64(92.63), np.float64(95.08), np.float64(97.99)]
+model= input_model
+  0%|          | 0/16 [00:00<?, ?it/s] 19%|█▉        | 3/16 [00:00<00:00, 23.42it/s] 38%|███▊      | 6/16 [00:00<00:00, 13.55it/s] 50%|█████     | 8/16 [00:00<00:00, 12.09it/s] 62%|██████▎   | 10/16 [00:00<00:00, 11.34it/s] 75%|███████▌  | 12/16 [00:01<00:00, 10.92it/s] 88%|████████▊ | 14/16 [00:01<00:00, 10.66it/s]100%|██████████| 16/16 [00:01<00:00, 10.51it/s]100%|██████████| 16/16 [00:01<00:00, 10.75it/s]
+{'eval_loss': 41.582481384277344, 'eval_model_preparation_time': 0.0019, 'eval_runtime': 1.5965, 'eval_samples_per_second': 40.088, 'eval_steps_per_second': 10.022} 
+
+
+
+start save at  dropout_model 
+
+
+
+----------------------------------------end ------------------------------
+
+2026-06-09 08:16:44.598928: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09 08:16:44.626332: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-09 08:16:45.329317: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09:08:16:47 INFO     [__main__:446] Selected Tasks: ['social_iqa']
+2026-06-09:08:16:47 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2026-06-09:08:16:47 INFO     [evaluator:240] Initializing hf model, with arguments: {'pretrained': './output/dropout_model/final_model'}
+2026-06-09:08:16:47 INFO     [models.huggingface:147] Using device 'cuda'
+2026-06-09:08:16:47 INFO     [models.huggingface:414] Model parallel was set to False, max memory was not set, and device map was set to {'': 'cuda'}
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.74it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.43it/s]
+2026-06-09:08:16:48 INFO     [models.huggingface:254] Model type is 'gemma', part of the Gemma family--a BOS token will be used as Gemma underperforms without it.
+2026-06-09:08:16:54 INFO     [api.task:434] Building contexts for social_iqa on rank 0...
+  0%|          | 0/1954 [00:00<?, ?it/s] 12%|█▏        | 235/1954 [00:00<00:00, 2347.13it/s] 24%|██▍       | 475/1954 [00:00<00:00, 2374.35it/s] 37%|███▋      | 716/1954 [00:00<00:00, 2386.94it/s] 49%|████▉     | 958/1954 [00:00<00:00, 2398.30it/s] 61%|██████▏   | 1200/1954 [00:00<00:00, 2403.56it/s] 74%|███████▍  | 1442/1954 [00:00<00:00, 2406.14it/s] 86%|████████▌ | 1683/1954 [00:00<00:00, 2406.27it/s] 98%|█████████▊| 1924/1954 [00:00<00:00, 2333.77it/s]100%|██████████| 1954/1954 [00:00<00:00, 2370.81it/s]
+2026-06-09:08:16:55 INFO     [evaluator:574] Running loglikelihood requests
+Running loglikelihood requests:   0%|          | 0/5862 [00:00<?, ?it/s]Running loglikelihood requests:   0%|          | 1/5862 [00:00<21:27,  4.55it/s]Running loglikelihood requests:   1%|          | 41/5862 [00:00<00:37, 153.80it/s]Running loglikelihood requests:   1%|▏         | 82/5862 [00:00<00:24, 240.06it/s]Running loglikelihood requests:   2%|▏         | 134/5862 [00:00<00:17, 323.58it/s]Running loglikelihood requests:   3%|▎         | 182/5862 [00:00<00:15, 366.99it/s]Running loglikelihood requests:   4%|▍         | 234/5862 [00:00<00:13, 408.67it/s]Running loglikelihood requests:   5%|▍         | 285/5862 [00:00<00:12, 432.63it/s]Running loglikelihood requests:   6%|▌         | 336/5862 [00:00<00:12, 448.00it/s]Running loglikelihood requests:   7%|▋         | 388/5862 [00:01<00:11, 461.97it/s]Running loglikelihood requests:   7%|▋         | 438/5862 [00:01<00:11, 466.24it/s]Running loglikelihood requests:   8%|▊         | 489/5862 [00:01<00:11, 477.69it/s]Running loglikelihood requests:   9%|▉         | 546/5862 [00:01<00:10, 486.28it/s]Running loglikelihood requests:  10%|█         | 602/5862 [00:01<00:10, 489.51it/s]Running loglikelihood requests:  11%|█▏        | 665/5862 [00:01<00:10, 510.88it/s]Running loglikelihood requests:  12%|█▏        | 723/5862 [00:01<00:10, 511.52it/s]Running loglikelihood requests:  13%|█▎        | 781/5862 [00:01<00:09, 513.74it/s]Running loglikelihood requests:  14%|█▍        | 841/5862 [00:01<00:09, 520.39it/s]Running loglikelihood requests:  15%|█▌        | 897/5862 [00:02<00:09, 514.19it/s]Running loglikelihood requests:  16%|█▋        | 956/5862 [00:02<00:09, 518.45it/s]Running loglikelihood requests:  17%|█▋        | 1012/5862 [00:02<00:09, 513.89it/s]Running loglikelihood requests:  18%|█▊        | 1071/5862 [00:02<00:09, 518.29it/s]Running loglikelihood requests:  19%|█▉        | 1130/5862 [00:02<00:09, 521.88it/s]Running loglikelihood requests:  20%|██        | 1187/5862 [00:02<00:09, 519.43it/s]Running loglikelihood requests:  21%|██▏       | 1246/5862 [00:02<00:08, 522.43it/s]Running loglikelihood requests:  22%|██▏       | 1303/5862 [00:02<00:08, 519.40it/s]Running loglikelihood requests:  23%|██▎       | 1361/5862 [00:02<00:08, 520.51it/s]Running loglikelihood requests:  24%|██▍       | 1421/5862 [00:03<00:08, 526.46it/s]Running loglikelihood requests:  25%|██▌       | 1485/5862 [00:03<00:08, 541.26it/s]Running loglikelihood requests:  26%|██▋       | 1545/5862 [00:03<00:07, 541.43it/s]Running loglikelihood requests:  27%|██▋       | 1606/5862 [00:03<00:07, 543.61it/s]Running loglikelihood requests:  28%|██▊       | 1667/5862 [00:03<00:07, 545.53it/s]Running loglikelihood requests:  29%|██▉       | 1727/5862 [00:03<00:07, 544.94it/s]Running loglikelihood requests:  31%|███       | 1791/5862 [00:03<00:07, 554.75it/s]Running loglikelihood requests:  32%|███▏      | 1851/5862 [00:03<00:07, 550.95it/s]Running loglikelihood requests:  33%|███▎      | 1915/5862 [00:03<00:07, 558.93it/s]Running loglikelihood requests:  34%|███▎      | 1972/5862 [00:04<00:07, 545.68it/s]Running loglikelihood requests:  35%|███▍      | 2028/5862 [00:04<00:07, 534.54it/s]Running loglikelihood requests:  36%|███▌      | 2090/5862 [00:04<00:06, 542.66it/s]Running loglikelihood requests:  37%|███▋      | 2145/5862 [00:04<00:06, 534.48it/s]Running loglikelihood requests:  38%|███▊      | 2199/5862 [00:04<00:07, 522.96it/s]Running loglikelihood requests:  39%|███▊      | 2262/5862 [00:04<00:06, 533.69it/s]Running loglikelihood requests:  40%|███▉      | 2319/5862 [00:04<00:06, 524.48it/s]Running loglikelihood requests:  41%|████      | 2378/5862 [00:04<00:06, 528.72it/s]Running loglikelihood requests:  42%|████▏     | 2435/5862 [00:04<00:06, 524.93it/s]Running loglikelihood requests:  43%|████▎     | 2512/5862 [00:05<00:05, 584.56it/s]Running loglikelihood requests:  44%|████▍     | 2587/5862 [00:05<00:05, 619.36it/s]Running loglikelihood requests:  45%|████▌     | 2653/5862 [00:05<00:05, 627.43it/s]Running loglikelihood requests:  46%|████▋     | 2724/5862 [00:05<00:04, 646.31it/s]Running loglikelihood requests:  48%|████▊     | 2792/5862 [00:05<00:04, 645.12it/s]Running loglikelihood requests:  49%|████▉     | 2860/5862 [00:05<00:04, 651.48it/s]Running loglikelihood requests:  50%|████▉     | 2926/5862 [00:05<00:04, 649.85it/s]Running loglikelihood requests:  51%|█████     | 2992/5862 [00:05<00:04, 650.13it/s]Running loglikelihood requests:  52%|█████▏    | 3061/5862 [00:05<00:04, 658.95it/s]Running loglikelihood requests:  53%|█████▎    | 3128/5862 [00:05<00:04, 658.53it/s]Running loglikelihood requests:  55%|█████▍    | 3200/5862 [00:06<00:03, 673.45it/s]Running loglikelihood requests:  56%|█████▌    | 3274/5862 [00:06<00:03, 689.13it/s]Running loglikelihood requests:  57%|█████▋    | 3343/5862 [00:06<00:03, 683.20it/s]Running loglikelihood requests:  58%|█████▊    | 3412/5862 [00:06<00:03, 679.98it/s]Running loglikelihood requests:  59%|█████▉    | 3485/5862 [00:06<00:03, 691.52it/s]Running loglikelihood requests:  61%|██████    | 3555/5862 [00:06<00:03, 691.14it/s]Running loglikelihood requests:  62%|██████▏   | 3625/5862 [00:06<00:03, 691.39it/s]Running loglikelihood requests:  63%|██████▎   | 3695/5862 [00:06<00:03, 691.17it/s]Running loglikelihood requests:  64%|██████▍   | 3765/5862 [00:06<00:03, 690.61it/s]Running loglikelihood requests:  65%|██████▌   | 3835/5862 [00:06<00:02, 690.60it/s]Running loglikelihood requests:  67%|██████▋   | 3905/5862 [00:07<00:02, 690.62it/s]Running loglikelihood requests:  68%|██████▊   | 3975/5862 [00:07<00:02, 691.83it/s]Running loglikelihood requests:  69%|██████▉   | 4045/5862 [00:07<00:02, 692.27it/s]Running loglikelihood requests:  70%|███████   | 4121/5862 [00:07<00:02, 709.80it/s]Running loglikelihood requests:  72%|███████▏  | 4192/5862 [00:07<00:02, 707.93it/s]Running loglikelihood requests:  73%|███████▎  | 4263/5862 [00:07<00:02, 706.54it/s]Running loglikelihood requests:  74%|███████▍  | 4334/5862 [00:07<00:02, 703.48it/s]Running loglikelihood requests:  75%|███████▌  | 4406/5862 [00:07<00:02, 705.87it/s]Running loglikelihood requests:  77%|███████▋  | 4485/5862 [00:07<00:01, 728.92it/s]Running loglikelihood requests:  78%|███████▊  | 4558/5862 [00:08<00:01, 718.17it/s]Running loglikelihood requests:  79%|███████▉  | 4632/5862 [00:08<00:01, 721.90it/s]Running loglikelihood requests:  80%|████████  | 4708/5862 [00:08<00:01, 732.63it/s]Running loglikelihood requests:  82%|████████▏ | 4782/5862 [00:08<00:01, 733.64it/s]Running loglikelihood requests:  83%|████████▎ | 4857/5862 [00:08<00:01, 738.28it/s]Running loglikelihood requests:  84%|████████▍ | 4932/5862 [00:08<00:01, 741.71it/s]Running loglikelihood requests:  85%|████████▌ | 5012/5862 [00:08<00:01, 758.76it/s]Running loglikelihood requests:  87%|████████▋ | 5090/5862 [00:08<00:01, 765.03it/s]Running loglikelihood requests:  88%|████████▊ | 5171/5862 [00:08<00:00, 778.11it/s]Running loglikelihood requests:  90%|████████▉ | 5256/5862 [00:08<00:00, 772.28it/s]Running loglikelihood requests:  91%|█████████ | 5342/5862 [00:09<00:00, 797.91it/s]Running loglikelihood requests:  92%|█████████▏| 5422/5862 [00:09<00:00, 772.72it/s]Running loglikelihood requests:  94%|█████████▍| 5500/5862 [00:09<00:00, 756.18it/s]Running loglikelihood requests:  95%|█████████▌| 5588/5862 [00:09<00:00, 768.24it/s]Running loglikelihood requests:  97%|█████████▋| 5683/5862 [00:09<00:00, 810.13it/s]Running loglikelihood requests:  99%|█████████▊| 5782/5862 [00:09<00:00, 851.25it/s]Running loglikelihood requests: 100%|██████████| 5862/5862 [00:09<00:00, 608.02it/s]
+2026-06-09:08:17:08 INFO     [loggers.evaluation_tracker:280] Output path not provided, skipping saving results aggregated
+hf (pretrained=./output/dropout_model/final_model), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: 8
+|  Tasks   |Version|Filter|n-shot|Metric|   |Value |   |Stderr|
+|----------|------:|------|-----:|------|---|-----:|---|-----:|
+|social_iqa|      0|none  |     0|acc   |↑  |0.4335|±  |0.0112|
+
+2026-06-09 08:17:10.940748: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09 08:17:10.968272: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-09 08:17:11.572944: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[2026-06-09 08:17:12,767] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-06-09 08:17:13,364] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+dropout: yes
+dropout threshold: 0.02
+relu standard: 0.0 
+recount: no 
+load my model  input_model
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.83it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.46it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.05it/s]
+/home/user/Desktop/chihyun/dropout/a3ilab/Projects/Probabilistic_Dropout/eval_gemma.py:493: FutureWarning: `tokenizer` is deprecated and will be removed in version 5.0.0 for `Trainer.__init__`. Use `processing_class` instead.
+  trainer = Trainer(
+Total params: 2506.172416 M
+Trainable params: 2506.172416 M
+---load and not  ---
+
+level_count:
+level  0   0.0  percent:100.0% (0.0%)   cdf= 100.0 %
+level  10   0.01  percent:49.75% (50.25%)   cdf= 97.99 %
+level  20   0.02  percent:38.39% (61.61%)   cdf= 95.08 %
+level  30   0.03  percent:32.62% (67.38%)   cdf= 92.63 %
+level  40   0.04  percent:27.86% (72.14%)   cdf= 89.84 %
+level  50   0.05  percent:24.38% (75.62%)   cdf= 87.18 %
+level  60   0.06  percent:21.74% (78.26%)   cdf= 84.69 %
+level  70   0.07  percent:19.6% (80.4%)   cdf= 82.28 %
+level  80   0.08  percent:17.84% (82.16%)   cdf= 79.99 %
+level  90   0.09  percent:16.56% (83.44%)   cdf= 78.11 %
+level  100   0.1  percent:15.27% (84.73%)   cdf= 75.99 %
+level  103   0.103  percent:12.32% (87.68%)   cdf= 70.43 %
+level  107   0.107  percent:9.71% (90.29%)   cdf= 63.92 %
+total neuron= 2506096640  inactivate neuron= 1116248064  real total neron: 3554672640
+inactivate2 percent= 61.605
+x0= [np.float64(8.42), np.float64(15.27), np.float64(24.38), np.float64(32.62), np.float64(38.39), np.float64(49.75)]
+y0= [np.float64(59.86), np.float64(75.99), np.float64(87.18), np.float64(92.63), np.float64(95.08), np.float64(97.99)]
+model= input_model
+  0%|          | 0/16 [00:00<?, ?it/s] 19%|█▉        | 3/16 [00:00<00:00, 26.04it/s] 38%|███▊      | 6/16 [00:00<00:00, 13.54it/s] 50%|█████     | 8/16 [00:00<00:00, 12.09it/s] 62%|██████▎   | 10/16 [00:00<00:00, 11.33it/s] 75%|███████▌  | 12/16 [00:01<00:00, 10.91it/s] 88%|████████▊ | 14/16 [00:01<00:00, 10.65it/s]100%|██████████| 16/16 [00:01<00:00, 10.51it/s]100%|██████████| 16/16 [00:01<00:00, 10.77it/s]
+{'eval_loss': 44.427085876464844, 'eval_model_preparation_time': 0.0012, 'eval_runtime': 1.5911, 'eval_samples_per_second': 40.223, 'eval_steps_per_second': 10.056} 
+
+
+
+start save at  dropout_model 
+
+
+
+----------------------------------------end ------------------------------
+
+2026-06-09 08:17:32.743031: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09 08:17:32.770505: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-09 08:17:33.475775: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09:08:17:35 INFO     [__main__:446] Selected Tasks: ['social_iqa']
+2026-06-09:08:17:35 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2026-06-09:08:17:35 INFO     [evaluator:240] Initializing hf model, with arguments: {'pretrained': './output/dropout_model/final_model'}
+2026-06-09:08:17:35 INFO     [models.huggingface:147] Using device 'cuda'
+2026-06-09:08:17:36 INFO     [models.huggingface:414] Model parallel was set to False, max memory was not set, and device map was set to {'': 'cuda'}
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.77it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.48it/s]
+2026-06-09:08:17:36 INFO     [models.huggingface:254] Model type is 'gemma', part of the Gemma family--a BOS token will be used as Gemma underperforms without it.
+2026-06-09:08:17:42 INFO     [api.task:434] Building contexts for social_iqa on rank 0...
+  0%|          | 0/1954 [00:00<?, ?it/s] 12%|█▏        | 235/1954 [00:00<00:00, 2344.60it/s] 24%|██▍       | 471/1954 [00:00<00:00, 2352.90it/s] 36%|███▋      | 711/1954 [00:00<00:00, 2374.07it/s] 49%|████▊     | 951/1954 [00:00<00:00, 2382.74it/s] 61%|██████    | 1192/1954 [00:00<00:00, 2390.70it/s] 73%|███████▎  | 1433/1954 [00:00<00:00, 2394.50it/s] 86%|████████▌ | 1673/1954 [00:00<00:00, 2395.52it/s] 98%|█████████▊| 1915/1954 [00:00<00:00, 2402.43it/s]100%|██████████| 1954/1954 [00:00<00:00, 2390.46it/s]
+2026-06-09:08:17:43 INFO     [evaluator:574] Running loglikelihood requests
+Running loglikelihood requests:   0%|          | 0/5862 [00:00<?, ?it/s]Running loglikelihood requests:   0%|          | 1/5862 [00:00<21:37,  4.52it/s]Running loglikelihood requests:   1%|          | 41/5862 [00:00<00:38, 153.05it/s]Running loglikelihood requests:   1%|▏         | 82/5862 [00:00<00:24, 240.45it/s]Running loglikelihood requests:   2%|▏         | 134/5862 [00:00<00:17, 323.99it/s]Running loglikelihood requests:   3%|▎         | 182/5862 [00:00<00:15, 367.07it/s]Running loglikelihood requests:   4%|▍         | 234/5862 [00:00<00:13, 408.55it/s]Running loglikelihood requests:   5%|▍         | 285/5862 [00:00<00:12, 432.14it/s]Running loglikelihood requests:   6%|▌         | 336/5862 [00:00<00:12, 447.34it/s]Running loglikelihood requests:   7%|▋         | 388/5862 [00:01<00:11, 461.49it/s]Running loglikelihood requests:   7%|▋         | 438/5862 [00:01<00:11, 466.17it/s]Running loglikelihood requests:   8%|▊         | 489/5862 [00:01<00:11, 476.97it/s]Running loglikelihood requests:   9%|▉         | 546/5862 [00:01<00:10, 485.75it/s]Running loglikelihood requests:  10%|█         | 602/5862 [00:01<00:10, 489.24it/s]Running loglikelihood requests:  11%|█▏        | 665/5862 [00:01<00:10, 510.72it/s]Running loglikelihood requests:  12%|█▏        | 723/5862 [00:01<00:10, 512.18it/s]Running loglikelihood requests:  13%|█▎        | 781/5862 [00:01<00:09, 513.61it/s]Running loglikelihood requests:  14%|█▍        | 841/5862 [00:01<00:09, 519.62it/s]Running loglikelihood requests:  15%|█▌        | 897/5862 [00:02<00:09, 513.76it/s]Running loglikelihood requests:  16%|█▋        | 956/5862 [00:02<00:09, 518.12it/s]Running loglikelihood requests:  17%|█▋        | 1012/5862 [00:02<00:09, 513.37it/s]Running loglikelihood requests:  18%|█▊        | 1071/5862 [00:02<00:09, 518.02it/s]Running loglikelihood requests:  19%|█▉        | 1130/5862 [00:02<00:09, 521.42it/s]Running loglikelihood requests:  20%|██        | 1187/5862 [00:02<00:09, 518.92it/s]Running loglikelihood requests:  21%|██▏       | 1246/5862 [00:02<00:08, 522.14it/s]Running loglikelihood requests:  22%|██▏       | 1303/5862 [00:02<00:08, 519.24it/s]Running loglikelihood requests:  23%|██▎       | 1361/5862 [00:02<00:08, 520.62it/s]Running loglikelihood requests:  24%|██▍       | 1421/5862 [00:03<00:08, 526.98it/s]Running loglikelihood requests:  25%|██▌       | 1485/5862 [00:03<00:08, 541.79it/s]Running loglikelihood requests:  26%|██▋       | 1545/5862 [00:03<00:07, 541.93it/s]Running loglikelihood requests:  27%|██▋       | 1606/5862 [00:03<00:07, 544.21it/s]Running loglikelihood requests:  28%|██▊       | 1667/5862 [00:03<00:07, 545.82it/s]Running loglikelihood requests:  29%|██▉       | 1727/5862 [00:03<00:07, 545.66it/s]Running loglikelihood requests:  31%|███       | 1791/5862 [00:03<00:07, 555.55it/s]Running loglikelihood requests:  32%|███▏      | 1851/5862 [00:03<00:07, 551.95it/s]Running loglikelihood requests:  33%|███▎      | 1915/5862 [00:03<00:07, 560.26it/s]Running loglikelihood requests:  34%|███▎      | 1972/5862 [00:04<00:07, 547.52it/s]Running loglikelihood requests:  35%|███▍      | 2028/5862 [00:04<00:07, 536.28it/s]Running loglikelihood requests:  36%|███▌      | 2090/5862 [00:04<00:06, 544.04it/s]Running loglikelihood requests:  37%|███▋      | 2145/5862 [00:04<00:06, 535.23it/s]Running loglikelihood requests:  38%|███▊      | 2199/5862 [00:04<00:07, 523.09it/s]Running loglikelihood requests:  39%|███▊      | 2262/5862 [00:04<00:06, 538.46it/s]Running loglikelihood requests:  40%|███▉      | 2319/5862 [00:04<00:06, 533.33it/s]Running loglikelihood requests:  41%|████      | 2378/5862 [00:04<00:06, 534.65it/s]Running loglikelihood requests:  42%|████▏     | 2435/5862 [00:04<00:06, 530.58it/s]Running loglikelihood requests:  43%|████▎     | 2512/5862 [00:05<00:05, 587.36it/s]Running loglikelihood requests:  44%|████▍     | 2587/5862 [00:05<00:05, 628.25it/s]Running loglikelihood requests:  45%|████▌     | 2653/5862 [00:05<00:05, 632.70it/s]Running loglikelihood requests:  46%|████▋     | 2724/5862 [00:05<00:04, 650.21it/s]Running loglikelihood requests:  48%|████▊     | 2792/5862 [00:05<00:04, 653.80it/s]Running loglikelihood requests:  49%|████▉     | 2860/5862 [00:05<00:04, 656.67it/s]Running loglikelihood requests:  50%|████▉     | 2926/5862 [00:05<00:04, 653.09it/s]Running loglikelihood requests:  51%|█████     | 2992/5862 [00:05<00:04, 650.97it/s]Running loglikelihood requests:  52%|█████▏    | 3061/5862 [00:05<00:04, 658.33it/s]Running loglikelihood requests:  53%|█████▎    | 3128/5862 [00:05<00:04, 658.63it/s]Running loglikelihood requests:  55%|█████▍    | 3200/5862 [00:06<00:03, 673.26it/s]Running loglikelihood requests:  56%|█████▌    | 3274/5862 [00:06<00:03, 689.61it/s]Running loglikelihood requests:  57%|█████▋    | 3343/5862 [00:06<00:03, 687.48it/s]Running loglikelihood requests:  58%|█████▊    | 3412/5862 [00:06<00:03, 683.97it/s]Running loglikelihood requests:  59%|█████▉    | 3485/5862 [00:06<00:03, 695.11it/s]Running loglikelihood requests:  61%|██████    | 3555/5862 [00:06<00:03, 694.58it/s]Running loglikelihood requests:  62%|██████▏   | 3625/5862 [00:06<00:03, 693.24it/s]Running loglikelihood requests:  63%|██████▎   | 3695/5862 [00:06<00:03, 693.12it/s]Running loglikelihood requests:  64%|██████▍   | 3765/5862 [00:06<00:03, 692.98it/s]Running loglikelihood requests:  65%|██████▌   | 3835/5862 [00:06<00:02, 693.14it/s]Running loglikelihood requests:  67%|██████▋   | 3905/5862 [00:07<00:02, 692.49it/s]Running loglikelihood requests:  68%|██████▊   | 3975/5862 [00:07<00:02, 691.93it/s]Running loglikelihood requests:  69%|██████▉   | 4045/5862 [00:07<00:02, 693.59it/s]Running loglikelihood requests:  70%|███████   | 4121/5862 [00:07<00:02, 711.16it/s]Running loglikelihood requests:  72%|███████▏  | 4193/5862 [00:07<00:02, 712.75it/s]Running loglikelihood requests:  73%|███████▎  | 4265/5862 [00:07<00:02, 713.00it/s]Running loglikelihood requests:  74%|███████▍  | 4337/5862 [00:07<00:02, 712.39it/s]Running loglikelihood requests:  75%|███████▌  | 4409/5862 [00:07<00:02, 712.19it/s]Running loglikelihood requests:  77%|███████▋  | 4485/5862 [00:07<00:01, 725.38it/s]Running loglikelihood requests:  78%|███████▊  | 4558/5862 [00:07<00:01, 725.17it/s]Running loglikelihood requests:  79%|███████▉  | 4632/5862 [00:08<00:01, 728.21it/s]Running loglikelihood requests:  80%|████████  | 4708/5862 [00:08<00:01, 736.60it/s]Running loglikelihood requests:  82%|████████▏ | 4782/5862 [00:08<00:01, 736.61it/s]Running loglikelihood requests:  83%|████████▎ | 4857/5862 [00:08<00:01, 739.25it/s]Running loglikelihood requests:  84%|████████▍ | 4932/5862 [00:08<00:01, 742.20it/s]Running loglikelihood requests:  85%|████████▌ | 5012/5862 [00:08<00:01, 758.70it/s]Running loglikelihood requests:  87%|████████▋ | 5088/5862 [00:08<00:01, 758.70it/s]Running loglikelihood requests:  88%|████████▊ | 5171/5862 [00:08<00:00, 780.00it/s]Running loglikelihood requests:  90%|████████▉ | 5256/5862 [00:08<00:00, 773.35it/s]Running loglikelihood requests:  91%|█████████ | 5344/5862 [00:09<00:00, 777.92it/s]Running loglikelihood requests:  93%|█████████▎| 5427/5862 [00:09<00:00, 766.84it/s]Running loglikelihood requests:  94%|█████████▍| 5518/5862 [00:09<00:00, 782.33it/s]Running loglikelihood requests:  96%|█████████▌| 5609/5862 [00:09<00:00, 797.41it/s]Running loglikelihood requests:  97%|█████████▋| 5705/5862 [00:09<00:00, 832.33it/s]Running loglikelihood requests:  99%|█████████▉| 5805/5862 [00:09<00:00, 869.42it/s]Running loglikelihood requests: 100%|██████████| 5862/5862 [00:09<00:00, 610.04it/s]
+2026-06-09:08:17:56 INFO     [loggers.evaluation_tracker:280] Output path not provided, skipping saving results aggregated
+hf (pretrained=./output/dropout_model/final_model), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: 8
+|  Tasks   |Version|Filter|n-shot|Metric|   |Value|   |Stderr|
+|----------|------:|------|-----:|------|---|----:|---|-----:|
+|social_iqa|      0|none  |     0|acc   |↑  |0.413|±  |0.0111|
+
+2026-06-09 08:17:58.750574: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09 08:17:58.777895: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-09 08:17:59.372016: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[2026-06-09 08:18:00,554] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-06-09 08:18:01,161] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+dropout: yes
+dropout threshold: 0.03
+relu standard: 0.0 
+recount: no 
+load my model  input_model
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.84it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.47it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.06it/s]
+/home/user/Desktop/chihyun/dropout/a3ilab/Projects/Probabilistic_Dropout/eval_gemma.py:493: FutureWarning: `tokenizer` is deprecated and will be removed in version 5.0.0 for `Trainer.__init__`. Use `processing_class` instead.
+  trainer = Trainer(
+Total params: 2506.172416 M
+Trainable params: 2506.172416 M
+---load and not  ---
+
+level_count:
+level  0   0.0  percent:100.0% (0.0%)   cdf= 100.0 %
+level  10   0.01  percent:49.75% (50.25%)   cdf= 97.99 %
+level  20   0.02  percent:38.39% (61.61%)   cdf= 95.08 %
+level  30   0.03  percent:32.62% (67.38%)   cdf= 92.63 %
+level  40   0.04  percent:27.86% (72.14%)   cdf= 89.84 %
+level  50   0.05  percent:24.38% (75.62%)   cdf= 87.18 %
+level  60   0.06  percent:21.74% (78.26%)   cdf= 84.69 %
+level  70   0.07  percent:19.6% (80.4%)   cdf= 82.28 %
+level  80   0.08  percent:17.84% (82.16%)   cdf= 79.99 %
+level  90   0.09  percent:16.56% (83.44%)   cdf= 78.11 %
+level  100   0.1  percent:15.27% (84.73%)   cdf= 75.99 %
+level  103   0.103  percent:12.32% (87.68%)   cdf= 70.43 %
+level  107   0.107  percent:9.71% (90.29%)   cdf= 63.92 %
+total neuron= 2506096640  inactivate neuron= 1237555200  real total neron: 3554672640
+inactivate2 percent= 68.300
+x0= [np.float64(8.42), np.float64(15.27), np.float64(24.38), np.float64(32.62), np.float64(38.39), np.float64(49.75)]
+y0= [np.float64(59.86), np.float64(75.99), np.float64(87.18), np.float64(92.63), np.float64(95.08), np.float64(97.99)]
+model= input_model
+  0%|          | 0/16 [00:00<?, ?it/s] 19%|█▉        | 3/16 [00:00<00:00, 26.17it/s] 38%|███▊      | 6/16 [00:00<00:00, 13.58it/s] 50%|█████     | 8/16 [00:00<00:00, 12.11it/s] 62%|██████▎   | 10/16 [00:00<00:00, 11.35it/s] 75%|███████▌  | 12/16 [00:01<00:00, 10.91it/s] 88%|████████▊ | 14/16 [00:01<00:00, 10.64it/s]100%|██████████| 16/16 [00:01<00:00, 10.50it/s]100%|██████████| 16/16 [00:01<00:00, 10.77it/s]
+{'eval_loss': 46.62471008300781, 'eval_model_preparation_time': 0.0012, 'eval_runtime': 1.5905, 'eval_samples_per_second': 40.238, 'eval_steps_per_second': 10.06} 
+
+
+
+start save at  dropout_model 
+
+
+
+----------------------------------------end ------------------------------
+
+2026-06-09 08:18:21.182943: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09 08:18:21.210188: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-09 08:18:21.920774: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-09:08:18:23 INFO     [__main__:446] Selected Tasks: ['social_iqa']
+2026-06-09:08:18:23 INFO     [evaluator:202] Setting random seed to 0 | Setting numpy seed to 1234 | Setting torch manual seed to 1234 | Setting fewshot manual seed to 1234
+2026-06-09:08:18:23 INFO     [evaluator:240] Initializing hf model, with arguments: {'pretrained': './output/dropout_model/final_model'}
+2026-06-09:08:18:24 INFO     [models.huggingface:147] Using device 'cuda'
+2026-06-09:08:18:24 INFO     [models.huggingface:414] Model parallel was set to False, max memory was not set, and device map was set to {'': 'cuda'}
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.75it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.45it/s]
+2026-06-09:08:18:25 INFO     [models.huggingface:254] Model type is 'gemma', part of the Gemma family--a BOS token will be used as Gemma underperforms without it.
+2026-06-09:08:18:30 INFO     [api.task:434] Building contexts for social_iqa on rank 0...
+  0%|          | 0/1954 [00:00<?, ?it/s] 12%|█▏        | 234/1954 [00:00<00:00, 2334.43it/s] 24%|██▍       | 470/1954 [00:00<00:00, 2344.44it/s] 36%|███▋      | 710/1954 [00:00<00:00, 2369.57it/s] 49%|████▊     | 952/1954 [00:00<00:00, 2389.00it/s] 61%|██████    | 1191/1954 [00:00<00:00, 2317.83it/s] 73%|███████▎  | 1433/1954 [00:00<00:00, 2349.72it/s] 86%|████████▌ | 1675/1954 [00:00<00:00, 2370.63it/s] 98%|█████████▊| 1915/1954 [00:00<00:00, 2378.89it/s]100%|██████████| 1954/1954 [00:00<00:00, 2365.34it/s]
+2026-06-09:08:18:31 INFO     [evaluator:574] Running loglikelihood requests
+Running loglikelihood requests:   0%|          | 0/5862 [00:00<?, ?it/s]Running loglikelihood requests:   0%|          | 1/5862 [00:00<21:53,  4.46it/s]Running loglikelihood requests:   1%|          | 41/5862 [00:00<00:38, 151.95it/s]Running loglikelihood requests:   1%|▏         | 82/5862 [00:00<00:24, 239.09it/s]Running loglikelihood requests:   2%|▏         | 134/5862 [00:00<00:17, 323.06it/s]Running loglikelihood requests:   3%|▎         | 182/5862 [00:00<00:15, 363.36it/s]Running loglikelihood requests:   4%|▍         | 234/5862 [00:00<00:13, 406.03it/s]Running loglikelihood requests:   5%|▍         | 285/5862 [00:00<00:12, 430.72it/s]Running loglikelihood requests:   6%|▌         | 336/5862 [00:00<00:12, 447.14it/s]Running loglikelihood requests:   7%|▋         | 388/5862 [00:01<00:11, 461.78it/s]Running loglikelihood requests:   7%|▋         | 438/5862 [00:01<00:11, 466.24it/s]Running loglikelihood requests:   8%|▊         | 489/5862 [00:01<00:11, 477.32it/s]Running loglikelihood requests:   9%|▉         | 546/5862 [00:01<00:10, 486.34it/s]Running loglikelihood requests:  10%|█         | 602/5862 [00:01<00:10, 489.26it/s]Running loglikelihood requests:  11%|█▏        | 665/5862 [00:01<00:10, 511.10it/s]Running loglikelihood requests:  12%|█▏        | 723/5862 [00:01<00:10, 512.56it/s]Running loglikelihood requests:  13%|█▎        | 781/5862 [00:01<00:09, 514.24it/s]Running loglikelihood requests:  14%|█▍        | 841/5862 [00:01<00:09, 520.39it/s]Running loglikelihood requests:  15%|█▌        | 897/5862 [00:02<00:09, 514.95it/s]Running loglikelihood requests:  16%|█▋        | 956/5862 [00:02<00:09, 519.36it/s]Running loglikelihood requests:  17%|█▋        | 1012/5862 [00:02<00:09, 514.30it/s]Running loglikelihood requests:  18%|█▊        | 1071/5862 [00:02<00:09, 518.63it/s]Running loglikelihood requests:  19%|█▉        | 1130/5862 [00:02<00:09, 522.04it/s]Running loglikelihood requests:  20%|██        | 1187/5862 [00:02<00:09, 519.06it/s]Running loglikelihood requests:  21%|██▏       | 1246/5862 [00:02<00:08, 522.08it/s]Running loglikelihood requests:  22%|██▏       | 1303/5862 [00:02<00:08, 519.16it/s]Running loglikelihood requests:  23%|██▎       | 1361/5862 [00:02<00:08, 520.21it/s]Running loglikelihood requests:  24%|██▍       | 1421/5862 [00:03<00:08, 527.13it/s]Running loglikelihood requests:  25%|██▌       | 1485/5862 [00:03<00:08, 542.16it/s]Running loglikelihood requests:  26%|██▋       | 1545/5862 [00:03<00:07, 542.11it/s]Running loglikelihood requests:  27%|██▋       | 1606/5862 [00:03<00:07, 544.86it/s]Running loglikelihood requests:  28%|██▊       | 1667/5862 [00:03<00:07, 546.79it/s]Running loglikelihood requests:  29%|██▉       | 1727/5862 [00:03<00:07, 545.43it/s]Running loglikelihood requests:  31%|███       | 1791/5862 [00:03<00:07, 555.41it/s]Running loglikelihood requests:  32%|███▏      | 1851/5862 [00:03<00:07, 551.63it/s]Running loglikelihood requests:  33%|███▎      | 1915/5862 [00:03<00:07, 559.71it/s]Running loglikelihood requests:  34%|███▎      | 1972/5862 [00:04<00:07, 546.91it/s]Running loglikelihood requests:  35%|███▍      | 2028/5862 [00:04<00:07, 535.10it/s]Running loglikelihood requests:  36%|███▌      | 2090/5862 [00:04<00:06, 543.26it/s]Running loglikelihood requests:  37%|███▋      | 2145/5862 [00:04<00:06, 534.48it/s]Running loglikelihood requests:  38%|███▊      | 2199/5862 [00:04<00:07, 522.46it/s]Running loglikelihood requests:  39%|███▊      | 2262/5862 [00:04<00:06, 537.90it/s]Running loglikelihood requests:  40%|███▉      | 2319/5862 [00:04<00:06, 532.49it/s]Running loglikelihood requests:  41%|████      | 2378/5862 [00:04<00:06, 534.12it/s]Running loglikelihood requests:  42%|████▏     | 2435/5862 [00:04<00:06, 529.86it/s]Running loglikelihood requests:  43%|████▎     | 2512/5862 [00:05<00:05, 587.22it/s]Running loglikelihood requests:  44%|████▍     | 2587/5862 [00:05<00:05, 628.04it/s]Running loglikelihood requests:  45%|████▌     | 2653/5862 [00:05<00:05, 632.36it/s]Running loglikelihood requests:  46%|████▋     | 2724/5862 [00:05<00:04, 649.29it/s]Running loglikelihood requests:  48%|████▊     | 2792/5862 [00:05<00:04, 652.96it/s]Running loglikelihood requests:  49%|████▉     | 2860/5862 [00:05<00:04, 655.44it/s]Running loglikelihood requests:  50%|████▉     | 2926/5862 [00:05<00:04, 651.59it/s]Running loglikelihood requests:  51%|█████     | 2992/5862 [00:05<00:04, 649.87it/s]Running loglikelihood requests:  52%|█████▏    | 3061/5862 [00:05<00:04, 657.36it/s]Running loglikelihood requests:  53%|█████▎    | 3128/5862 [00:05<00:04, 657.28it/s]Running loglikelihood requests:  55%|█████▍    | 3200/5862 [00:06<00:03, 670.65it/s]Running loglikelihood requests:  56%|█████▌    | 3274/5862 [00:06<00:03, 686.12it/s]Running loglikelihood requests:  57%|█████▋    | 3343/5862 [00:06<00:03, 682.52it/s]Running loglikelihood requests:  58%|█████▊    | 3412/5862 [00:06<00:03, 680.24it/s]Running loglikelihood requests:  59%|█████▉    | 3485/5862 [00:06<00:03, 691.63it/s]Running loglikelihood requests:  61%|██████    | 3555/5862 [00:06<00:03, 690.30it/s]Running loglikelihood requests:  62%|██████▏   | 3625/5862 [00:06<00:03, 689.68it/s]Running loglikelihood requests:  63%|██████▎   | 3694/5862 [00:06<00:03, 686.61it/s]Running loglikelihood requests:  64%|██████▍   | 3763/5862 [00:06<00:03, 684.00it/s]Running loglikelihood requests:  65%|██████▌   | 3832/5862 [00:06<00:02, 682.15it/s]Running loglikelihood requests:  67%|██████▋   | 3903/5862 [00:07<00:02, 687.47it/s]Running loglikelihood requests:  68%|██████▊   | 3974/5862 [00:07<00:02, 691.61it/s]Running loglikelihood requests:  69%|██████▉   | 4045/5862 [00:07<00:02, 694.82it/s]Running loglikelihood requests:  70%|███████   | 4121/5862 [00:07<00:02, 711.48it/s]Running loglikelihood requests:  72%|███████▏  | 4193/5862 [00:07<00:02, 711.46it/s]Running loglikelihood requests:  73%|███████▎  | 4265/5862 [00:07<00:02, 711.90it/s]Running loglikelihood requests:  74%|███████▍  | 4337/5862 [00:07<00:02, 710.96it/s]Running loglikelihood requests:  75%|███████▌  | 4409/5862 [00:07<00:02, 710.67it/s]Running loglikelihood requests:  77%|███████▋  | 4485/5862 [00:07<00:01, 720.17it/s]Running loglikelihood requests:  78%|███████▊  | 4558/5862 [00:08<00:01, 721.92it/s]Running loglikelihood requests:  79%|███████▉  | 4632/5862 [00:08<00:01, 726.94it/s]Running loglikelihood requests:  80%|████████  | 4708/5862 [00:08<00:01, 731.81it/s]Running loglikelihood requests:  82%|████████▏ | 4782/5862 [00:08<00:01, 730.20it/s]Running loglikelihood requests:  83%|████████▎ | 4858/5862 [00:08<00:01, 738.95it/s]Running loglikelihood requests:  84%|████████▍ | 4935/5862 [00:08<00:01, 748.07it/s]Running loglikelihood requests:  85%|████████▌ | 5012/5862 [00:08<00:01, 750.22it/s]Running loglikelihood requests:  87%|████████▋ | 5088/5862 [00:08<00:01, 745.14it/s]Running loglikelihood requests:  88%|████████▊ | 5171/5862 [00:08<00:00, 769.02it/s]Running loglikelihood requests:  90%|████████▉ | 5249/5862 [00:08<00:00, 772.27it/s]Running loglikelihood requests:  91%|█████████ | 5334/5862 [00:09<00:00, 768.85it/s]Running loglikelihood requests:  92%|█████████▏| 5417/5862 [00:09<00:00, 761.09it/s]Running loglikelihood requests:  94%|█████████▍| 5499/5862 [00:09<00:00, 773.00it/s]Running loglikelihood requests:  95%|█████████▌| 5588/5862 [00:09<00:00, 782.44it/s]Running loglikelihood requests:  97%|█████████▋| 5683/5862 [00:09<00:00, 816.08it/s]Running loglikelihood requests:  99%|█████████▊| 5782/5862 [00:09<00:00, 846.59it/s]Running loglikelihood requests: 100%|██████████| 5862/5862 [00:09<00:00, 607.82it/s]
+2026-06-09:08:18:44 INFO     [loggers.evaluation_tracker:280] Output path not provided, skipping saving results aggregated
+hf (pretrained=./output/dropout_model/final_model), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: 8
+|  Tasks   |Version|Filter|n-shot|Metric|   |Value |   |Stderr|
+|----------|------:|------|-----:|------|---|-----:|---|-----:|
+|social_iqa|      0|none  |     0|acc   |↑  |0.3961|±  |0.0111|
+
