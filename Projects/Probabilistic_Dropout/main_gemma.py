@@ -797,7 +797,7 @@ class ReloadModelCallback(TrainerCallback): #訓練時對冷神經元處理
         self.trainer = trainer
     
     def on_step_end(self, args, state, control, **kwargs):
-        if state.global_step >= state.max_steps-1:
+        if state.global_step >= state.max_steps-1 and ch=='yes':
         	print("\n\n***End load***\n\n")
         	check(self.trainer.model, input_text, data_train, tokenizer, True) 
         	return	
