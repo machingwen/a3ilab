@@ -42,7 +42,7 @@ Gray_Hair Female
 
 The model first learns each semantic factor from seen combinations, then repeatedly improves the missing composition by generating candidates, keeping only correct samples, and retraining with the updated dataset.
 
-![Iterative algorithm process](process.png)
+![Iterative algorithm process](process.pdf)
 
 ## Modified Balanced Sampling
 
