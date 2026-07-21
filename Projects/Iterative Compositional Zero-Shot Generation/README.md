@@ -1,150 +1,237 @@
-# CCDT
+# Iterative Compositional Zero-Shot Generation
 
-這個專案是以 DiT (Diffusion Transformer) 為基礎修改的條件式影像生成模型。模型使用兩個條件輸入：
+This repository is the implementation of **Iterative Compositional Zero-Shot Generation**.
+
+CCDT is only one part of the whole framework. In this project, CCDT is used as the conditional DiT-based generation module for composing two conditions:
 
 - `c1`: attribute condition
 - `c2`: object condition
 
-## Environment
-
-建議使用 Conda 建立環境：
-
-```bash
-conda env create -f environment.yml
-conda activate DiT
-```
-
-如果你是手動安裝依賴，請先補裝以下前置套件：
-
-```bash
-pip install torchsampler timm diffusers datasets accelerate
-```
-
-主要會用到：
-
-- PyTorch
-- torchvision
-- diffusers
-- timm
-- torchsampler
-- tqdm
-
-訓練需要 GPU，且目前 `train.py` 使用 PyTorch DDP。
-
-## Dataset Format
-
-訓練資料需依照類別資料夾排列，每張圖片放在對應的條件資料夾底下。資料夾名稱格式為：
-
-```text
-<attribute> <object>
-```
-
-範例：
-
-```text
-Phison/
-├── Good Group1/
-│   ├── xxx.jpg
-│   └── ...
-├── Good Group2/
-├── Shift Group1/
-└── Shift Group2/
-```
-
-`dataset.py` 會從圖片上一層資料夾名稱解析 label：
+For example:
 
 ```text
 Good Group1 -> c1 = Good, c2 = Group1
 ```
 
-不同資料集的 attribute / object 對應表定義在 `config.py`。
+## Method Flow
 
-## Train CCDT
+The overall paper pipeline is:
 
-使用 2 張 GPU 訓練：
-
-```bash
-torchrun --nnodes=1 --nproc_per_node=2 train.py --model DiT-XL/2 --num_condition 4 2
+```text
+Initial dataset D0
+  -> remove the target unseen attribute-object class
+  -> split each remaining class into attribute/object conditions
+  -> encode images into latent space with Stable Diffusion VAE
+  -> train CCDT with compositional conditions c1 and c2
+  -> generate candidates for the unseen attribute-object composition
+  -> manually select correct, high-quality generated samples
+  -> add selected samples back into the training set
+  -> retrain or fine-tune with modified balanced sampling
+  -> repeat until the final refined model is obtained
 ```
 
-如果要指定資料集路徑：
+In short, the paper focuses on **iterative compositional zero-shot generation**, while CCDT is the generation component used inside the framework.
+
+## Iterative Algorithm
+
+The iterative algorithm follows the human-in-the-loop retraining procedure described in the paper. The goal is to synthesize a target composition that does not appear in the initial training data, such as:
+
+```text
+Gray_Hair Female
+```
+
+The model first learns each semantic factor from seen combinations. For example, it may learn `Gray_Hair` from male samples and `Female` from other hair-color samples, then compose them at inference time.
+
+Paper-level procedure:
+
+```text
+Input:
+  D0      initial dataset without the target unseen class
+  gamma   smoothing parameter for modified balanced sampling
+  T       number of iterative refinement rounds
+
+Phase 1: Initial zero-shot training
+  1. Train f_theta_0 on D0 with compositional conditioning.
+
+Phase 2: Human-in-the-loop iterative refinement
+  for t = 1 ... T:
+    2. Use f_theta_(t-1) to generate candidate images for the unseen composition.
+    3. Human evaluators manually keep only correct and high-quality samples S_t.
+    4. Update the training set:
+
+       D_t = D_(t-1) + S_t
+
+    5. Recompute class sampling weights on D_t.
+    6. Retrain or fine-tune the model with the updated dataset and sampling weights.
+
+Output:
+  f_theta_T, the final refined model.
+```
+
+This loop is designed to reduce semantic errors in unseen compositions. Early generated samples may contain incorrect attributes, incorrect objects, or visual artifacts. By feeding only verified correct samples back into training, the model gradually receives a stronger signal for the missing attribute-object pair.
+
+## Modified Balanced Sampling
+
+Because the selected generated samples are manually filtered, the updated dataset can become imbalanced. The paper uses a modified balanced sampler to give rare classes more chance to appear during training while avoiding overly aggressive resampling.
+
+For each class `c`, let `N_c` be the number of samples in that class. For a sample `i` from class `c`, its unnormalized probability is:
+
+```text
+p_i = 1 / (N_c ^ gamma)
+```
+
+The final sampling probability is normalized over all samples:
+
+```text
+P_i = p_i / sum_j(p_j)
+```
+
+The smoothing parameter `gamma` controls the resampling strength:
+
+```text
+gamma = 0       uniform sample-level sampling
+0 < gamma < 1   smoother compromise between balance and diversity
+gamma = 1       standard balanced sampling, strongest emphasis on rare classes
+```
+
+In the paper experiments, different `gamma` values are compared during iterative retraining. The main trade-off is:
+
+```text
+higher correctness for the unseen composition
+vs.
+preserving perceptual diversity among generated samples
+```
+
+In the current implementation, `gamma` is set inside `train_modified_balance.py` when creating `BalancedDistributedSampler`:
+
+```python
+gamma=0.5
+```
+
+Change this value to any value between `0` and `1`:
+
+```text
+0 <= gamma <= 1
+```
+
+For example, the paper compares settings such as:
+
+```text
+gamma = 0
+gamma = 0.3
+gamma = 0.5
+gamma = 0.7
+gamma = 1
+```
+
+## Practical Iterative Workflow
+
+This repository provides the main CCDT training and sampling components. The full iterative loop is orchestrated by repeatedly preparing datasets, training, generating, and filtering samples.
+
+1. Prepare `D0` by excluding the target unseen class.
+2. Train the initial CCDT model with `train_modified_balance.py`.
+3. Generate candidate images for the target condition with `sample.py`.
+4. Manually inspect generated images and keep only correct samples.
+5. Add the selected samples into the target class folder of the next dataset version.
+6. Retrain or fine-tune the model on the updated dataset with `train_modified_balance.py`.
+7. Repeat the generation, selection, merge, and retraining process for the desired number of iterations.
+
+For example, the dataset versions can be organized as:
+
+```text
+CelebA_itr1/   # D0, target unseen class removed
+CelebA_itr2/   # D1 + manually selected samples from iteration 1
+CelebA_itr3/   # D2 + manually selected samples from iteration 2
+```
+
+The `train_modified_balance.py` script trains the compositional DiT model with the paper's modified balanced sampler. It computes sampling probabilities from class frequencies as described above and uses the `gamma` value set in the sampler configuration.
+
+## Dataset Format
+
+The dataset folder should use class names in the format:
+
+```text
+<attribute> <object>
+```
+
+Example:
+
+```text
+Phison/
+  Good Group1/
+    xxx.jpg
+  Good Group2/
+    xxx.jpg
+  Shift Group1/
+    xxx.jpg
+  Shift Group2/
+    xxx.jpg
+```
+
+`dataset.py` reads the folder name and splits it into `attribute` and `object`.
+The corresponding label mappings are defined in `config.py`.
+
+## Train
+
+Example:
 
 ```bash
-torchrun --nnodes=1 --nproc_per_node=2 train.py \
+torchrun --nnodes=1 --nproc_per_node=2 train_modified_balance.py \
   --data_path /path/to/dataset \
   --model DiT-XL/2 \
+  --image-size 128 \
   --num_condition 4 2
 ```
 
-常用參數：
+`--num_condition` means:
 
-- `--data_path`: 訓練資料路徑，預設為 `/workspace/DiT/CelebA`
-- `--model`: DiT model size，例如 `DiT-XL/2`
-- `--image-size`: 輸入圖片解析度，預設 `128`
-- `--num_condition`: 兩個條件的類別數，格式為 `<num_c1> <num_c2>`
-- `--epochs`: 訓練 epoch 數，預設 `200`
-- `--global-batch-size`: 全域 batch size，預設 `64`
-- `--ckpt-every`: 每幾個 epoch 存一次 checkpoint，預設 `50`
-- `--results-dir`: checkpoint 和 log 輸出資料夾，預設 `results`
+```text
+<number_of_attributes> <number_of_objects>
+```
 
-checkpoint 會儲存在：
+For example:
+
+```bash
+--num_condition 4 2   # 4 attributes, 2 objects
+--num_condition 2 7   # 2 attributes, 7 objects
+```
+
+Checkpoints are saved in:
 
 ```text
 results/<experiment-name>/checkpoints/
 ```
 
-## Generate CCDT Images
+## Generate
 
-使用訓練好的 checkpoint 生成圖片：
-
-```bash
-python sample.py --num_condition 4 2
-```
-
-如果要指定 checkpoint：
+Example:
 
 ```bash
 python sample.py \
   --model DiT-XL/2 \
+  --image-size 128 \
   --num_condition 4 2 \
   --ckpt /path/to/checkpoint.pt
 ```
 
-常用參數：
+The sampled condition indices are currently set inside `sample.py`:
 
-- `--model`: 使用的 DiT 架構
-- `--image-size`: 生成圖片解析度，需和訓練時一致
-- `--num_condition`: 兩個條件的類別數，需和訓練時一致
-- `--ckpt`: checkpoint 路徑
-- `--cfg-scale`: classifier-free guidance scale
-- `--num-sampling-steps`: diffusion sampling steps
-- `--seed`: random seed
-
-## Condition Settings
-
-`--num_condition 4 2` 代表：
-
-- 第一個條件 `c1` 有 4 個類別
-- 第二個條件 `c2` 有 2 個類別
-
-請確認這個數字和 `config.py` 中對應資料集的類別數一致，否則 label index 可能超出 embedding table 範圍。
-
-## Project Structure
-
-```text
-models.py          # DiT / CCDT model definition
-train.py           # DDP training script
-sample.py          # sampling script
-dataset.py         # custom image dataset loader
-config.py          # dataset condition mappings
-diffusion/         # diffusion process utilities
-LPIPS/             # LPIPS evaluation code
-results/           # training outputs and checkpoints
-Sample/            # generated samples
+```python
+c1 = [1]
+c2 = [2]
 ```
 
-## Notes
+Change `c1` and `c2` to generate different attribute-object compositions.
 
-- `train.py` 會根據 `--data_path` 的資料夾名稱選擇 `config.py` 裡的設定，例如 `CelebA`、`Phison`、`Mnist`。
-- 圖片會先透過 Stable Diffusion VAE encode 到 latent space，再送進 DiT 訓練。
-- sampling 時需使用和訓練相同的 `--image-size`、`--model`、`--num_condition`。
+## Files
+
+```text
+models.py                  # DiT / CCDT model
+train_modified_balance.py  # training script with modified balanced sampling
+sample.py                  # generation script
+dataset.py                 # dataset loader
+config.py                  # attribute/object label mappings
+Classifier/                # classifier-based evaluation utilities
+LPIPS/                     # perceptual diversity evaluation
+diffusion/                 # diffusion utilities
+```
