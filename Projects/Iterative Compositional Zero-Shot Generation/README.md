@@ -34,41 +34,15 @@ In short, the paper focuses on **iterative compositional zero-shot generation**,
 
 ## Iterative Algorithm
 
-The iterative algorithm follows the human-in-the-loop retraining procedure described in the paper. The goal is to synthesize a target composition that does not appear in the initial training data, such as:
+The iterative algorithm is a human-in-the-loop retraining loop for generating an unseen attribute-object composition, such as:
 
 ```text
 Gray_Hair Female
 ```
 
-The model first learns each semantic factor from seen combinations. For example, it may learn `Gray_Hair` from male samples and `Female` from other hair-color samples, then compose them at inference time.
+The model first learns each semantic factor from seen combinations, then repeatedly improves the missing composition by generating candidates, keeping only correct samples, and retraining with the updated dataset.
 
-Paper-level procedure:
-
-```text
-Input:
-  D0      initial dataset without the target unseen class
-  gamma   smoothing parameter for modified balanced sampling
-  T       number of iterative refinement rounds
-
-Phase 1: Initial zero-shot training
-  1. Train f_theta_0 on D0 with compositional conditioning.
-
-Phase 2: Human-in-the-loop iterative refinement
-  for t = 1 ... T:
-    2. Use f_theta_(t-1) to generate candidate images for the unseen composition.
-    3. Human evaluators manually keep only correct and high-quality samples S_t.
-    4. Update the training set:
-
-       D_t = D_(t-1) + S_t
-
-    5. Recompute class sampling weights on D_t.
-    6. Retrain or fine-tune the model with the updated dataset and sampling weights.
-
-Output:
-  f_theta_T, the final refined model.
-```
-
-This loop is designed to reduce semantic errors in unseen compositions. Early generated samples may contain incorrect attributes, incorrect objects, or visual artifacts. By feeding only verified correct samples back into training, the model gradually receives a stronger signal for the missing attribute-object pair.
+![Iterative algorithm process](process.png)
 
 ## Modified Balanced Sampling
 
