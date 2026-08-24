@@ -1,8 +1,12 @@
 
 
-python main_gemma.py -load yes -train yes -recount no -check no -relu yes -data siqa_short -dropout_method no -input input_model -output my_new_model  -lr 1e-5 
 
-python main_gemma.py -load yes -train yes -recount no -check n0 -relu yes -data siqa_md -dropout_method no -input my_new_model -output my_new_model  -lr 1e-5 
+
+
+python main_gemma.py -load yes -train yes -recount no -check no -relu yes -data siqa_short -dropout_method no -input input_model -output my_new_model  -lr 1e-5 -l1 yes -l1_lr 5e-9
+
+python main_gemma.py -load yes -train yes -recount no -check no -relu yes -data siqa_md -dropout_method no -input my_new_model -output my_new_model  -lr 1e-5 -l1 yes -l1_lr 1e-8
+
 
 python eval_gemma.py --dropout yes --threshold 0.001  --sd 0 --original no --recount yes --model my_new_model --recount_data data_siqa
 lm_eval --model hf \
@@ -10,12 +14,7 @@ lm_eval --model hf \
     --tasks social_iqa\
     --device cuda \
     --batch_size 8
-python eval_gemma.py --dropout yes --threshold 0.002  --sd 0 --original no --recount no --model my_new_model --recount_data data_siqa
-lm_eval --model hf \
-    --model_args  pretrained=./output/dropout_model/final_model\
-    --tasks social_iqa\
-    --device cuda \
-    --batch_size 8
+
 python eval_gemma.py --dropout yes --threshold 0.003  --sd 0 --original no --recount no --model my_new_model --recount_data data_siqa
 lm_eval --model hf \
     --model_args  pretrained=./output/dropout_model/final_model\
@@ -51,25 +50,5 @@ lm_eval --model hf \
     --batch_size 8
 
 
-python eval_gemma.py --dropout yes --threshold 0.02  --sd 0 --original no --recount no --model my_new_model --recount_data data_siqa
-lm_eval --model hf \
-    --model_args  pretrained=./output/dropout_model/final_model\
-    --tasks social_iqa\
-    --device cuda \
-    --batch_size 8
-python eval_gemma.py --dropout yes --threshold 0.03  --sd 0 --original no --recount no --model my_new_model --recount_data data_siqa
-lm_eval --model hf \
-    --model_args  pretrained=./output/dropout_model/final_model\
-    --tasks social_iqa\
-    --device cuda \
-    --batch_size 8
-    
-python eval_gemma.py --dropout yes --threshold 0.04  --sd 0 --original no --recount no --model my_new_model --recount_data data_siqa
-lm_eval --model hf \
-    --model_args  pretrained=./output/dropout_model/final_model\
-    --tasks social_iqa\
-    --device cuda \
-    --batch_size 8
-       
-    
-    
+
+
