@@ -40,10 +40,10 @@ if __name__ == "__main__":
     show("eval_sin","Probabilistic dropout, sin")
     show("eval_cos","Probabilistic dropout, cos")
 
-    show("eval_1e6","l1-le6")
-    show("eval_1e7","l1-le7")
-    show("eval_1e8","l1-le8")	
-   
+    print("\n-----\n")
+    show("eval_b0","baseline(no dropout, no l1)")
+    show("eval_np_new","our Activity-Aware L1 Regularization")
+    show("eval_l1_new","old Conventional L1 Regularization")	
 
 
 
