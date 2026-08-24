@@ -1,6 +1,6 @@
 
 
-# my project
+# Neuron-Activity-Aware Fine-Tuning for Large Language Models: Enhancing the Sparsity–Performance Trade-of
 
 
 
@@ -21,8 +21,25 @@ This step must be executed before running any experiments:
 ```
 bash ex0.sh 
 ```
+## Activity-Aware L1 Regularization
 
-## Experiment 1: 
+### Our Proposed Activity-Aware L1 Regularization 
+```
+bash np.sh 2>&1  | grep -v "Running loglikelihood requests" | tee log/eval_np.log
+```
+### Conventional L1 Regularization (old L1 Regularization) 
+```
+bash ex4_l1.sh 2>&1| grep -v "Running loglikelihood requests" | tee log/eval_l1.log
+```
+### Baseline ( fine-tuned without activation L1 regularization) 
+```
+bash ex0_b0.sh 2>&1 | grep -v "Running loglikelihood requests" | tee log/eval_b0.log
+```
+
+
+## Probabilistic Dropout 
+
+### Experiment 1: 
 
 old Baseline(no dropout)
 
@@ -42,7 +59,7 @@ Probabilistic dropout (cdf, linear)
 bash ex1_p1.sh 2>&1 | tee log/ex1_p1.log
 ```
 
-## Experiment 2: 
+### Experiment 2: 
 
 Cdf
 
@@ -55,7 +72,7 @@ Activity-Freq
 bash ex2_fr.sh 2>&1 | tee log/eval_fr.log
 ```
 
-## Experiment 3: 
+### Experiment 3: 
 
 linear
 ```
@@ -69,27 +86,12 @@ bash ex3_sin.sh 2>&1 | tee log/eval_sin.log
 bash ex3_cos.sh 2>&1 | tee log/eval_cos.log
 ```
 
-## Experiment 4: 
 
-l1 method
-```
-bash ex4_1e6.sh 2>&1 | tee log/eval_1e6.log
-bash ex4_1e7.sh 2>&1 | tee log/eval_1e7.log
-bash ex4_1e8.sh 2>&1 | tee log/eval_1e8.log
-```
-
-## show easy read result (after running all experiments)
-
-
+###  show easy read result (after running all experiments)
 ```
 python exlog.py
 ```
 
-## run all codes with one script
-
-```
-bash runall.sh
-```
 
 
 
