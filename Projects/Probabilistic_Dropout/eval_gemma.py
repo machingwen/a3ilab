@@ -39,10 +39,6 @@ def show_num(model):
 
 
 
-
-
-
-
 def get_reply(input_text):
         inputs = tokenizer(input_text, return_tensors="pt")
         outputs = model.generate(input_ids=inputs.input_ids.to('cuda'),
@@ -65,12 +61,9 @@ from deepspeed.runtime.activation_checkpointing import checkpointing
 #tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf")
 
 
-	
 
-if 1==0:
-	tokenizer = AutoTokenizer.from_pretrained("facebook/opt-2.7b", device_map="cuda")
-	model = AutoModelForCausalLM.from_pretrained("facebook/opt-2.7b", device_map="cuda",torch_dtype=torch.float16)	
-	
+		
+
 if 1==0:# my pretrain model after alpaca_clean 5 epoch
 	path='facebook/opt-2.7b'
 	tokenizer = AutoTokenizer.from_pretrained(path)
@@ -384,10 +377,10 @@ def check_end(model,tokenizer):
 		x0=[]
 		y0=[]
 		for z in  range(181):	
-			if (z%10==0 and z<=100) or(z==103 or z==107): #or (z>=101 and z%10==0) 
-				pp=" percent:"+(str)(round(100-c*100/n,2))+"% ("+(str)(round(c*100/n,2))+"%)"
+			if (z%10==0 and z<=100) or z==105 or z<=5 or z==130 or z==150 or (z>=101 and z%10==0):
+				pp=" neuron percent:"+(str)(round(100-c*100/n,2))+"% (masked: "+(str)(round(c*100/n,2))+"%)"
 				print('level ',z," ",(z/1000),pp,"  cdf=",round(cdf[z]*100/m,2),"%")#,level[z]
-			if z==100 or z==110 or z==50 or z==30 or z==20 or z==10:
+			
 				x0.append(round(100-c*100/n,2))
 				y0.append(round(cdf[z]*100/m,2))
 				
@@ -397,8 +390,10 @@ def check_end(model,tokenizer):
 		#print()
 		#print('inactivate percent=', "{:.3f}".format(p)," : ", "{:.3f}".format(p_r))
 		print('inactivate2 percent=', "{:.3f}".format(p2))
-		x0.reverse()
-		y0.reverse()
+		#x0.reverse()
+		#y0.reverse()
+		x0 = [float(v) for v in x0]
+		y0 = [float(v) for v in y0]
 		print('x0=',x0)
 		print('y0=',y0)
 		
@@ -501,8 +496,8 @@ def eval_model(model,model_name,output_path):
    
     print('model=',model_name)
     
-    result=trainer.evaluate()  # 執行評估
-    print(result,'\n\n')
+  #  result=trainer.evaluate()  # 執行評估
+   # print(result,'\n\n')
     print('\nstart save at ',output_path,'\n\n')
     trainer.save_model(f"output/{output_path}/final_model")
     return model
@@ -552,32 +547,7 @@ def inference(model,input_text):
 from transformers.utils import logging
 import argparse
 
-'''
-import lm_eval
-from lm_eval.utils import setup_logging
-from lm_eval.api.model import LM
 
-from lm_eval.api.model import LM
-from lm_eval.api.registry import register_model
-from  lm_eval.api.instance  import Instance
-from lm_eval.models.huggingface import HFLM
-@register_model("my_in_memory_model")
-class MyLM(HFLM):
-    def __init__(self, model_instance, tokenizer_instance, device="cpu", batch_size=1):
-        # HFLM 的 __init__ 需要 hf_model 和 hf_tokenizer
-        # 它會自動處理 device 和 batch_size
-        # 注意：trust_remote_code=True 應該在 from_pretrained 時處理
-        super().__init__(
-            pretrained=None, # 我們直接傳入實例，所以這裡填None
-            tokenizer=None,  # 我們直接傳入實例，所以這裡填None
-            device=device,
-            batch_size=batch_size,
-        )
-        self._model = model_instance # 將傳入的模型實例賦值給 HFLM 內部使用的 _model
-        self.tokenizer = tokenizer_instance # 將傳入的 tokenizer 實例賦值給 HFLM 內部使用的 tokenizer
-        self._model.eval() # 確保模型處於評估模式
-
-'''
 # 實例化您的自定義模型
 
 
@@ -603,8 +573,7 @@ if __name__ == "__main__":
 
 
     # 解析參數
-   
-   
+  
     args = parser.parse_args()
     model_name=args.model
     dr=args.dropout
@@ -621,9 +590,12 @@ if __name__ == "__main__":
    
     tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b")
     tokenizer.pad_token = '[PAD]'
-    if om=='yes':
+    if om=='yes' and model_name=="gemma_model":
     	print('google/gemma-2b')
     	model =  AutoModelForCausalLM.from_pretrained("google/gemma-2b", device_map="cuda", torch_dtype=torch.bfloat16)
+    elif om=='yes':
+    	print('load my model ', model_name, " from hub")
+    	model =  AutoModelForCausalLM.from_pretrained("a111311/"+model_name, device_map="cuda", torch_dtype=torch.bfloat16)
     else:
     	print('load my model ', model_name)
     	model = AutoModelForCausalLM.from_pretrained("output/"+model_name+"/final_model",torch_dtype=torch.bfloat16, device_map="cuda", trust_remote_code=True)  #final_model   #checkpoint-500
@@ -635,50 +607,10 @@ if __name__ == "__main__":
     show_num(model)
     if dr=='yes':
     	model=check_end(model, tokenizer) 
-    
-    input_text="There are two spelling errors in the sentence. The corrected sentence"
-    #print('input:\n', input_text)
-    #print('real_output:\n', real_output)
-    #out=inference(model,input_text)
-    #print('output:\n', out)
-    
-    input_text="Some people don't understand the internet's"
-    #print('input:\n', input_text)
-    #print('real_output:\n', real_output)
-   # out=inference(model,input_text)
-  #  print('output:\n', out)
-
-    input_text="A number of casualties were confirmed, although the exact number of wounded was"
-   # print('input:\n', input_text)
-   # out=inference(model,input_text)
-   # print('output:\n', out)    
-    
-    input_text="After the fall of the Roman Empire, the area was first invaded"
-    #print('input:\n', input_text)
-    #out=inference(model,input_text)
-    #print('output:\n', out)    
-    
-    #print('\n')	
-
 
 
     model=eval_model(model,model_name, output_p)
     
-
-    if 1==0:
-	    print('\n-- lm_eval --\n')
-	    my_model = MyLM(model, tokenizer, device="cpu") # 這裡使用CPU以簡化，可改為cuda:0
-
-	    #my_in_memory_lm_instance = MyInMemoryLM(model, tokenizer, device="cpu") # 這裡使用CPU以簡化，可改為cuda:0
-	    
-	    results = lm_eval.simple_evaluate(
-	    model=my_model, # 注意這裡不是hf，而是你註冊的模型名稱
-	    tasks=["hellaswag"], # 替換為您想評估的任務
-	    batch_size=1,
-	    device="cpu", # 與模型實例的device一致
-	    limit=10 # 限制評估樣本數，方便測試
-	    )
-	    print(results)
 
 
     print('\n----------------------------------------end ------------------------------\n')

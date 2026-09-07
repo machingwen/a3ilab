@@ -60,7 +60,15 @@ from deepspeed.runtime.activation_checkpointing import checkpointing
 
 
 
-	
+        
+hf_token = ""
+wb_token = ""
+if 1==1:
+	#wandb.login(key=wb_token)
+	login(token=hf_token)
+
+
+		
 
 if 1==0:
 	path="microsoft/phi-2"
@@ -398,7 +406,7 @@ def check(model,input_text,input_text_train,tokenizer,print0=True): #主要函�
 		#h=(1-math.sin(g*100/79/200*3.14159))/2.3+0.05	
 		#h=(1-math.sin(g*100/90/200*3.14159))*1.9+0.03#50
 		#h=(1-math.sin(g*100/80/200*3.14159))*1.35+0.02#35
-		h=(1-math.sin(g*100/80/200*3.14159))*1.7+0.03#
+		h=(1-math.sin(g*100/80/200*3.14159))*1.45+0.02#
 		
 		return h*100							
 	def ch_f(g):
@@ -435,7 +443,7 @@ def check(model,input_text,input_text_train,tokenizer,print0=True): #主要函�
 		t=0
 		t2=0
 		#print('hook_fn_count total=',total,' ',module.weight)	
-		if 1==0 or (module.weight.shape[0]==16384 and module.weight.shape[1]==2048 ):#適用於llama up
+		if 1==0 or (module.weight.shape[0]==16384 and module.weight.shape[1]==2048 ):#適用於
 			total=total%18+1
 			
 			#print('hook_fn_count total=',total,' weifht',module.weight.shape, ' output:',output.shape)
@@ -467,10 +475,14 @@ def check(model,input_text,input_text_train,tokenizer,print0=True): #主要函�
 				#print('hook_fn_count total=',total,' gh=',gh,' cp1[total][z]=',cp1[total][z])
 			
 				cp1[total][z]=1
+				test=False
 				if random.randint(1, 1001)<gh*10:
 					#module.weight.data[z,:]=module.weight.data[z,:]*0.95 #weight_fix
 					#module.bias.data[z]=module.bias.data[z]-bias_fix
 					t+=module.weight.shape[1]*2
+					if test==True :#and gh>30
+						module.weight.data[z,:]*=0#module.weight.data[z,:]*0.1
+						
 					t2+=1
 					cp1[total][z]=0
 
@@ -634,17 +646,16 @@ def check_start(model,input_text,input_text_train,tokenizer,print0=True,count=Fa
 				num+=1
 				total=1
 			#print('\nhook_fn num:',num,' total:',total,"input_shape: ",input[0].shape)
-		
+			x = input[0]
 			for t in range(input[0].shape[0]):#遍歷layer中的每個batch
 				for z in range(input[0].shape[2]):#遍歷layer中的每個神經元
 					er=0
-					for i in range(0, input[0].shape[1]): #遍歷inference時的每個輸入token
-						if input[0][t][i][z]>0:  #-module.bias[z]:
-							er+=1
-							#break		
-					an+=1 #第幾次統計
-					atotal[total][z]=atotal[total][z]+input[0].shape[1]  #total是第幾層 z是該曾第幾神經元
-					ac[total][z]=ac[total][z]+er
+					col = x[t, :, z]  # [T]
+
+					er = (col > 0).sum().item()
+					an += 1
+					atotal[total][z] += x.shape[1]
+					ac[total][z] += er
 	
 	def hook_fn_count(module, input, output): #train時，對隨機到的冷神經元處理(非統計)
 		global total, neuron, inactivate, inactivate2, neuron2, first, num, ac, atotal, level, cp1
@@ -719,7 +730,7 @@ def check_start(model,input_text,input_text_train,tokenizer,print0=True,count=Fa
 			print_time(start_time)
 			print('t=',i,'/',len(input_text_train))#,' ,' t=',t text=',t
 			i+=1
-			if i>6: #只統計文檔中的前五段文字(因為統計過程很耗時間)
+			if i>6: #
 				break
 			inputs_train = tokenizer(t, return_tensors="pt").to('cuda')
 			
@@ -843,8 +854,11 @@ class SparsityTrainer(Trainer):
     	def hook_fn_train(module, input,output): # train過程中，隨機dropout冷神經元，須配合  hook_fn_count		
     		#print('compute_loss hook',' input:',input[0].shape,' ',input[0] )
     		nonlocal tmp
-    		g=input[0].sum()
-    		gg=torch.abs(g)
+    		
+    		gg = torch.abs(input[0]).sum()
+    		#g=input[0].sum()
+    		#gg=torch.abs(g)
+    		
     		tmp+=gg	
     		#print('x: ',input[0])
     		#x_dropped = F.dropout(input[0], p=0.1, training=module.training)
@@ -871,7 +885,7 @@ class SparsityTrainer(Trainer):
         
         
    
-def train_model(model,output_name, my_evel_step, my_train_data,my_test_data,real_train,my_lr):
+def train_model(model,output_name, my_evel_step, my_train_data,my_test_data,real_train,my_lr,save_name):
 
     torch.autograd.set_detect_anomaly(True)
     model.train()
@@ -942,6 +956,13 @@ def train_model(model,output_name, my_evel_step, my_train_data,my_test_data,real
    
     print('\nstart save at ',output_path,'\n\n')
     trainer.save_model(f"{output_path}/final_model")
+    
+    if save_name!="save_model":
+	    s_name="a111311/"+save_name
+	    model.push_to_hub(s_name, private=False)
+	    tokenizer.push_to_hub(s_name, private=False)
+	    
+    
     #trainer.evaluate()
     
     return trainer.model
@@ -995,7 +1016,7 @@ def replace(model):
 
 
 def main(args):
-	global weight_fix, bias_fix, ch, dropout_method, l1, l1_lr, l1_real_lr, normal_dropout
+	global ch, dropout_method, l1, l1_lr, l1_real_lr, normal_dropout
 	if args.load=='no':
 		print('google/gemma-2b')
 		#model = AutoModelForCausalLM.from_pretrained("SparseLLM/ReluLLaMA-7B", device_map="cuda", torch_dtype=torch.bfloat16)
@@ -1011,8 +1032,7 @@ def main(args):
 		model = AutoModelForCausalLM.from_pretrained("output/"+args.input+"/final_model",torch_dtype=torch.bfloat16, device_map="cuda", trust_remote_code=True)  #final_model   #checkpoint-500 torch.bfloat16
 
 	
-	weight_fix = args.weight_fix
-	bias_fix = args.bias_fix
+
 	ch = args.check
 	dropout_method = args.dropout_method
 	l1= args.l1
@@ -1087,17 +1107,24 @@ def main(args):
 			test_data=load_dataset('lighteval/siqa', split="validation[:200]")
 			tokenized_test_data = test_data.map(tokenize4_siqa)
 		elif args.data=='siqa_short':
-			train_data=load_dataset('lighteval/siqa', split="train[:5%]")
+			train_data=load_dataset('lighteval/siqa', split="train[:5%]")#5%
 			tokenized_train_data = train_data.map(tokenize4_siqa)
 			test_data=load_dataset('lighteval/siqa', split="validation[:200]")
 			tokenized_test_data = test_data.map(tokenize4_siqa)
-																		
+		elif args.data=='siqa_md':
+			train_data=load_dataset('lighteval/siqa', split="train[5%:15%]")#5%
+			tokenized_train_data = train_data.map(tokenize4_siqa)
+			test_data=load_dataset('lighteval/siqa', split="validation[:200]")
+			tokenized_test_data = test_data.map(tokenize4_siqa)
+																				
 		else:
 			print('\n\n\n*****  error **** \n\n ***** dataset error *****\n\n')
 
 	
 		print('train data= ',args.data)
-		model=train_model(model,args.output,10, tokenized_train_data,tokenized_test_data, args.train, args.lr)	
+		model=train_model(model,args.output,10, tokenized_train_data,tokenized_test_data, args.train, args.lr,args.save_name)	
+		
+		
 		print('end train')
 		if ch=='yes':
 			model=check(model, input_text, data_train, tokenizer, True)
@@ -1112,6 +1139,7 @@ if __name__ == "__main__":
     parser.add_argument("-lr", type=float, default=3e-5, help="Learning rate ")
     parser.add_argument("-output", type=str,default='gemma_model', help="output model name")
     parser.add_argument("-input", type=str,default='input_model', help="input model name")
+    parser.add_argument("-save_name", type=str,default='save_model', help="save model name to huggingface")
     parser.add_argument("-weight_fix", type=float,default=1, help="old trash")
     parser.add_argument("-bias_fix", type=float,default=0, help="old trash")
     parser.add_argument("-check", type=str,default='yes', help="check or not")

@@ -897,7 +897,7 @@ class SparsityTrainer(Trainer):
         
         
    
-def train_model(model,output_name, my_evel_step, my_train_data,my_test_data,real_train,my_lr):
+def train_model(model,output_name, my_evel_step, my_train_data,my_test_data,real_train,my_lr,save_name):
 
     torch.autograd.set_detect_anomaly(True)
     model.train()
@@ -969,7 +969,11 @@ def train_model(model,output_name, my_evel_step, my_train_data,my_test_data,real
     print('\nstart save at ',output_path,'\n\n')
     trainer.save_model(f"{output_path}/final_model")
     #trainer.evaluate()
-    
+    if save_name!="save_model":
+	    s_name="a111311/"+save_name
+	    model.push_to_hub(s_name, private=False)
+	    tokenizer.push_to_hub(s_name, private=False)
+	     
     return trainer.model
     
 import argparse    
@@ -1021,7 +1025,7 @@ def replace(model):
 
 
 def main(args):
-	global weight_fix, bias_fix, ch, dropout_method, l1, l1_lr, l1_real_lr, normal_dropout
+	global ch, dropout_method, l1, l1_lr, l1_real_lr, normal_dropout
 	if args.load=='no':
 		print('google/gemma-2b')
 		#model = AutoModelForCausalLM.from_pretrained("SparseLLM/ReluLLaMA-7B", device_map="cuda", torch_dtype=torch.bfloat16)
@@ -1037,8 +1041,7 @@ def main(args):
 		model = AutoModelForCausalLM.from_pretrained("output/"+args.input+"/final_model",torch_dtype=torch.bfloat16, device_map="cuda", trust_remote_code=True)  #final_model   #checkpoint-500 torch.bfloat16
 
 	
-	weight_fix = args.weight_fix
-	bias_fix = args.bias_fix
+	
 	ch = args.check
 	dropout_method = args.dropout_method
 	l1= args.l1
@@ -1128,7 +1131,7 @@ def main(args):
 
 	
 		print('train data= ',args.data)
-		model=train_model(model,args.output,10, tokenized_train_data,tokenized_test_data, args.train, args.lr)	
+		model=train_model(model,args.output,10, tokenized_train_data,tokenized_test_data, args.train, args.lr,args.save_name)	
 		print('end train')
 		if ch=='yes':
 			model=check(model, input_text, data_train, tokenizer, True)
@@ -1143,8 +1146,8 @@ if __name__ == "__main__":
     parser.add_argument("-lr", type=float, default=3e-5, help="Learning rate ")
     parser.add_argument("-output", type=str,default='gemma_model', help="output model name")
     parser.add_argument("-input", type=str,default='input_model', help="input model name")
-    parser.add_argument("-weight_fix", type=float,default=1, help="old trash")
-    parser.add_argument("-bias_fix", type=float,default=0, help="old trash")
+    parser.add_argument("-save_name", type=str,default='save_model', help="save model name to huggingface")
+
     parser.add_argument("-check", type=str,default='yes', help="check or not")
     parser.add_argument("-relu", type=str,default='yes', help="relu or not")
     parser.add_argument("-data", type=str,default='alpaca', help="train dataset")

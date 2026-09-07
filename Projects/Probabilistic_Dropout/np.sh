@@ -3,7 +3,7 @@
 
 python new_gemma.py -load yes -train yes -recount yes -check yes -relu yes -data siqa_short -dropout_method fr -input input_model -output my_new_model  -lr 1e-5 -l1_lr 5e-9
 
-python new_gemma.py -load yes -train yes -recount yes -check yes -relu yes -data siqa_md -dropout_method fr -input my_new_model -output my_new_model  -lr 1e-5 -l1_lr 1e-8
+python new_gemma.py -load yes -train yes -recount yes -check yes -relu yes -data siqa_md -dropout_method fr -input my_new_model -output my_new_model  -lr 1e-5 -l1_lr 1e-8 -save_name my_l1
 
 python eval_gemma.py --dropout yes --threshold 0.001  --sd 0 --original no --recount yes --model my_new_model --recount_data data_siqa
 lm_eval --model hf \

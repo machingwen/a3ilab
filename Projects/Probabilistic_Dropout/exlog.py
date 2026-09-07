@@ -13,6 +13,7 @@ def extract_xy(log_text):
     y_list = [float(y) for y in y_list]
 
     return x_list, y_list
+    
 
 def show(d,text):
     t="log/"+d+'.log'
@@ -26,13 +27,18 @@ def show(d,text):
 	    print(text," ",d)
 	    print(f"x={x}")
 	    print(f"y={y}")
-  	
+
+
+    
+    	      	
 if __name__ == "__main__":
 
     #show("eval.log")	
     
     print("x=masked neuron rate, y=acc(siqa)")
-    show("eval_b0","Old baseline(no dropout, no l1)")
+    
+
+    
     show("eval_b1","Baseline (normal dropout)")
     show("eval_p1","Probabilistic dropout, cdf, linear")
     
@@ -40,6 +46,13 @@ if __name__ == "__main__":
     show("eval_sin","Probabilistic dropout, sin")
     show("eval_cos","Probabilistic dropout, cos")
 
+
+    
+    '''  
+    show("eval_b1_piqa","Baseline (normal dropout) on piqa benchmark")
+    show("eval_p1_piqa","Probabilistic dropout, cdf, linear on piqa benchmark")    
+
+   '''
 
 
 
