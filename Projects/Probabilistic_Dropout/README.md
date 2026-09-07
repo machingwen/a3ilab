@@ -1,10 +1,10 @@
 
 
-# Neuron-Activity-Aware Fine-Tuning for Large Language Models: Enhancing the Sparsity–Performance Trade-of
+# Neuron-Activity-Aware Fine-Tuning for Large Language Models: Enhancing the Sparsity–Performance Trade-off
 
 
 
-## overview
+## Overview
 
 All experiments can be executed using the following logging format:
 
@@ -23,17 +23,37 @@ bash ex0.sh
 ```
 ## Activity-Aware L1 Regularization
 
-### Our Proposed Activity-Aware L1 Regularization 
+### Training with Our Proposed Activity-Aware L1 Regularization 
 ```
 bash np.sh 2>&1  | grep -v "Running loglikelihood requests" | tee log/eval_np.log
 ```
-### Conventional L1 Regularization (old L1 Regularization) 
+### Training with Conventional L1 Regularization (old L1 Regularization) 
 ```
 bash ex4_l1.sh 2>&1| grep -v "Running loglikelihood requests" | tee log/eval_l1.log
 ```
-### Baseline ( fine-tuned without activation L1 regularization) 
+### Training with Baseline (fine-tuned without activation L1 regularization) 
 ```
 bash ex0_b0.sh 2>&1 | grep -v "Running loglikelihood requests" | tee log/eval_b0.log
+```
+
+### Evaluate Existing Models about L1-regularized 
+
+Evaluate the baseline and the two L1-regularized models:
+
+```
+mkdir -p log
+
+# Baseline without activation L1 regularization
+bash eval_np.sh no_l1 2>&1 | tee log/eval_b0.log
+
+# Conventional activation L1 regularization
+bash eval_np.sh old_l1 2>&1 | tee log/eval_l1.log
+
+# Our Proposed Activity-Aware L1 Regularization
+bash eval_np.sh my_l1 2>&1 | tee log/eval_np.log
+
+# Summarize the evaluation results
+python exlog_np.py
 ```
 
 
@@ -87,11 +107,28 @@ bash ex3_cos.sh 2>&1 | tee log/eval_cos.log
 ```
 
 
-###  show easy read result (after running all experiments)
+### Evaluate Existing Models about Probabilistic Dropout
+
+
+
 ```
+mkdir -p log
+
+# Probabilistic Dropout with CDF-based linear mapping on SIQA
+bash eval.sh ex1_p1 2>&1 | tee log/eval_p1.log
+
+# Uniform Dropout baseline on SIQA
+bash eval.sh ex1_b1 2>&1 | tee log/eval_b1.log
+
+# Probabilistic Dropout with CDF-based linear mapping on PIQA
+bash eval_piqa.sh ex1_p1 2>&1 | tee log/eval_p1_piqa.log
+
+# Uniform Dropout baseline on PIQA
+bash eval_piqa.sh ex1_b1 2>&1 | tee log/eval_b1_piqa.log
+
+# Summarize the evaluation results
 python exlog.py
 ```
-
 
 
 
