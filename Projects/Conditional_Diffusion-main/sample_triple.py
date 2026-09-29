@@ -7,7 +7,7 @@ from pathlib import Path
 import torch
 from torchvision.utils import save_image
 
-from labels import parse_condition
+from labels_triple import parse_condition
 from models.triple import TripleDDIMSampler, TripleUNet
 
 
