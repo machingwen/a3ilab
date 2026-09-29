@@ -16,7 +16,7 @@ from PIL import Image
 from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 from torchvision import transforms
 
-from labels import COLOR, SEX, STYLE, parse_condition
+from labels_triple import COLOR, SEX, STYLE, parse_condition
 from models.triple import TripleDiffusionTrainer, TripleUNet
 
 
